@@ -9,6 +9,8 @@
     maxJobs = 2;
   }];
 
+  environment.etc."nix/docker_rsa".source = ./ssh/insecure_rsa;
+
   home-manager.users.root = {
     programs.ssh.enable = true;
     programs.ssh.matchBlocks = {
