@@ -8,6 +8,9 @@
   };
   home-manager.users.andy = { pkgs, ... }: import ./home.nix { inherit pkgs; };
 
+  # touch ID when sudo'ing
+  security.pam.enableSudoTouchIdAuth = true;
+
   # hotkey manager
   # https://github.com/koekeishiya/skhd
   services.skhd.enable = true;
