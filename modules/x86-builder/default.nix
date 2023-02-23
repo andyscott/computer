@@ -25,6 +25,9 @@
     home.stateVersion = "22.11";
   };
 
+  # TODO -- use the new? darwin builder?
+  # https://nixos.org/manual/nixpkgs/unstable/#sec-darwin-builder
+
   # TODO -- can I get this working? Turn it into callable script, instead?
   #launchd.user.agents.start-colima = {
   #  script = ''
