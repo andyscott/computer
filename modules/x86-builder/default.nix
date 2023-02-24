@@ -11,6 +11,11 @@
 
   environment.etc."nix/docker_rsa".source = ./ssh/insecure_rsa;
 
+  system.activationScripts.postActivation.text = ''
+    chmod 0600 /etc/nix/docker_rsa
+  '';
+
+
   home-manager.users.root = {
     programs.ssh.enable = true;
     programs.ssh.matchBlocks = {
