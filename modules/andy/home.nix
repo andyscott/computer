@@ -4,15 +4,45 @@ let
   darwinShellInit = ''
     export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
   '';
+
+  base16-shell = pkgs.stdenv.mkDerivation rec {
+    name = "base16-shell";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "chriskempson";
+      repo = "base16-shell";
+      rev = "588691ba71b47e75793ed9edfcfaa058326a6f41";
+      sha256 = "sha256-X89FsG9QICDw3jZvOCB/KsPBVOLUeE7xN3VCtf0DD3E=";
+    };
+
+    installPhase = ''
+      mkdir -p $out
+      cp -r . $out
+    '';
+  };
+
+  git-gpg-key = "C0012AF12CAF6F92";
 in
 {
   home.username = "andy";
   home.homeDirectory = "/Users/andy";
 
+  # without this, nix-darwin managed GPG won't be able to generate keys
+  # and do other important work
+  home.file.".gnupg/gpg-agent.conf".text = ''
+    allow-preset-passphrase
+    pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
+  '';
+
   programs.git = {
     enable = true;
     userName = "Andy Scott";
     userEmail = "andy.g.scott@gmail.com";
+
+    signing = {
+      signByDefault = true;
+      key = git-gpg-key;
+    };
 
     extraConfig = {
       color = {
@@ -23,9 +53,8 @@ in
         ui = "auto";
         sh = "auto";
       };
-      #whitespace = "trailing-space,space-before-tab";
 
-      #commit.gpgsign         = true;
+      init.defaultBranch = "main";
 
       github.user = "andyscott";
 
@@ -58,9 +87,6 @@ in
 
       unset RPS1
       unset RPROMPT
-
-      BASE16_SHELL=$HOME/.config/base16-shell/
-      [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
       function _ansi() { (($# - 2)) || echo -n "%F{$1}$2%f"; }
 
@@ -115,7 +141,6 @@ in
           last_status=$?
           local bits && bits=(
             _prompt_status_symbol
-            _prompt_path
             _prompt_git_status
           )
           _wrap $PWD $bits
@@ -127,6 +152,15 @@ in
 
       eval "$(atuin init zsh)"
       eval "$(zoxide init zsh)"
+
+      # Base16 Shell
+
+      source '${base16-shell}/profile_helper.sh'
+      base16_rebecca
+
+      # eval "$(${pkgs._1password}/bin/op signin)"
+      # ${pkgs._1password}/bin/op item get "Git GPG Key" --fields passphrase \
+      #   | ${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase --preset ${git-gpg-key}
     '';
 
     shellAliases = {
@@ -137,7 +171,6 @@ in
 
   programs.bash = {
     enable = true;
-    #initExtra = darwinShellInit;
   };
 
   # This value determines the Home Manager release that your
@@ -152,29 +185,33 @@ in
 
   # Base install of packages
   home.packages = [
-    pkgs.atuin #
+    pkgs._1password
+    pkgs.gh
+
+    pkgs.atuin # shell history
     pkgs.coreutils # cat, date, md5sum, mkdir, mv, realpath, sha1sum, touch, ...
+    pkgs.moreutils # sponge, chronic, ...
+    pkgs.jq # jq
+    pkgs.yq-go # yq but the better version
     pkgs.curl # curl
     pkgs.diffutils # diff
     pkgs.nixpkgs-fmt
-    #pkgs.exa # exa
     pkgs.lsd # lsd
     pkgs.findutils # find, xargs, ...
     pkgs.gawk # awk
-    #pkgs.git       # git
+    pkgs.git # git
     pkgs.gnugrep # grep
     pkgs.gnused # sed
     pkgs.gnutar # tar
-    pkgs.x86.jq # jq
+    pkgs.gnupg
     pkgs.moreutils # chronic
     pkgs.openssh # ssh, ssh-keygen, ...
     pkgs.wget # wget
     pkgs.xz # xz
-    pkgs.yq-go # yq
     pkgs.python3 # python3
     pkgs.zoxide # zoxide
     pkgs.fzf
     pkgs.ripgrep
-    pkgs._1password
+    pkgs.kitty
   ];
 }

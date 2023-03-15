@@ -8,6 +8,11 @@
   };
   home-manager.users.andy = { pkgs, ... }: import ./home.nix { inherit pkgs; };
 
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+
   # touch ID when sudo'ing
   security.pam.enableSudoTouchIdAuth = true;
 
@@ -62,6 +67,16 @@
   system.defaults.dock.autohide = true;
   system.defaults.dock.launchanim = false;
   system.defaults.dock.orientation = "right";
+
+  # screen corner actions
+  #  1: disabled
+  #  3: application windows
+  #  5: start screen saver
+  # 13: lock screen
+  system.defaults.dock.wvous-tl-corner = 3;
+  system.defaults.dock.wvous-tr-corner = 5;
+  system.defaults.dock.wvous-bl-corner = 1;
+  system.defaults.dock.wvous-br-corner = 1;
 
   system.defaults.finder._FXShowPosixPathInTitle = true;
   system.defaults.finder.FXEnableExtensionChangeWarning = false;

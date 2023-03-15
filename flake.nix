@@ -2,8 +2,18 @@
   description = "the machine(s)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-22.11-darwin";
-    home-manager.url = "github:nix-community/home-manager";
+    nixpkgs = {
+      type = "github";
+      owner = "NixOS";
+      repo = "nixpkgs";
+      rev = "0d15ddddc54e04bc34065a9e47024a2c90063f47";
+    };
+    home-manager = {
+      type = "github";
+      owner = "nix-community";
+      repo = "home-manager";
+      rev = "95201931f2e733705296d1d779e70793deaeb909";
+    };
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
