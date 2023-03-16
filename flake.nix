@@ -2,6 +2,7 @@
   description = "the machine(s)";
 
   inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs = {
       type = "github";
       owner = "NixOS";
@@ -19,51 +20,63 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs @ { self, nixpkgs, home-manager, darwin }:
+  outputs = inputs @ { self, flake-utils, nixpkgs, home-manager, darwin }:
+    with nixpkgs.lib;
     let
       nixpkgsConfig = {
         config.allowUnfree = true;
       };
-    in
-    with nixpkgs.lib;    rec {
-      overlays = {
-        apple-m1-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-          x86 = import inputs.nixpkgs {
-            system = "x86_64-darwin";
-            inherit (nixpkgsConfig) config;
+
+      system-agnostic = {
+        overlays = {
+          apple-m1-x86 = final: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+            x86 = import inputs.nixpkgs {
+              system = "x86_64-darwin";
+              inherit (nixpkgsConfig) config;
+            };
           };
         };
       };
 
-      darwinConfigurations.default =
+      system-dependent = flake-utils.lib.eachDefaultSystem (system:
         let
-          system = "aarch64-darwin";
-
           pkgs = import nixpkgs {
             inherit system;
             inherit (nixpkgsConfig) config;
             overlays = [
-              self.overlays.apple-m1-x86
+              system-agnostic.overlays.apple-m1-x86
             ];
           };
-          utils = import ./utils.nix { inherit (nixpkgs) lib; };
 
         in
-        darwin.lib.darwinSystem {
-          inherit system;
-          modules = [
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs pkgs; };
-            }
-          ] ++ (
-            utils.discover-modules' ./modules import
-          );
+        (nixpkgs.lib.optionalAttrs (strings.hasSuffix "-darwin" system) rec {
+          darwinConfigurations.default =
+            let utils = import ./utils.nix { inherit (nixpkgs) lib; };
+            in darwin.lib.darwinSystem {
+              inherit system;
+              modules = [
+                home-manager.darwinModules.home-manager
+                {
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  home-manager.extraSpecialArgs = { inherit inputs pkgs; };
+                }
+              ] ++ (
+                utils.discover-modules' ./modules import
+              );
+            };
 
-        };
+          defaultPackage = darwinConfigurations.default.system;
 
-      defaultPackage.aarch64-darwin = darwinConfigurations.default.system;
-    };
+          devShells.default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              pre-commit
+              shellcheck
+              nixpkgs-fmt
+            ];
+          };
+        }));
+
+    in
+    system-dependent // system-agnostic;
 }
