@@ -189,6 +189,7 @@ in
     pkgs.gh
 
     pkgs.atuin # shell history
+    pkgs.babashka
     pkgs.coreutils # cat, date, md5sum, mkdir, mv, realpath, sha1sum, touch, ...
     pkgs.moreutils # sponge, chronic, ...
     pkgs.jq # jq

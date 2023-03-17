@@ -50,7 +50,7 @@
 
         in
         (nixpkgs.lib.optionalAttrs (strings.hasSuffix "-darwin" system) rec {
-          darwinConfigurations.default =
+          packages.darwinConfigurations.default =
             let utils = import ./utils.nix { inherit (nixpkgs) lib; };
             in darwin.lib.darwinSystem {
               inherit system;
@@ -66,7 +66,7 @@
               );
             };
 
-          defaultPackage = darwinConfigurations.default.system;
+          defaultPackage = packages.darwinConfigurations.default.system;
 
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
