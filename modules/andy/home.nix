@@ -22,6 +22,16 @@ let
   };
 
   git-gpg-key = "C0012AF12CAF6F92";
+
+  gpom = pkgs.writeShellScriptBin "gpom" ''
+    root="$(${pkgs.git}/bin/git rev-parse --show-toplevel)"
+    if [ -f "$root"/.git/refs/heads/main ]; then
+      branch=main
+    else
+      branch=master
+    fi
+    ${pkgs.git}/bin/git pull origin "$branch"
+  '';
 in
 {
   home.username = "andy";
@@ -214,5 +224,7 @@ in
     pkgs.fzf
     pkgs.ripgrep
     pkgs.kitty
+
+    gpom
   ];
 }
