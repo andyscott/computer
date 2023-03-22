@@ -32,6 +32,15 @@ let
     fi
     ${pkgs.git}/bin/git pull origin "$branch"
   '';
+
+  git-tardis = pkgs.writeShellScriptBin "git-tardis" ''
+    git --no-pager log --color -g --abbrev-commit --pretty='%C(auto)%h% D %C(blue)%cr%C(reset) %gs (%s)' \
+      | fzf --ansi \
+      | cut -d " " -f 1 \
+      | xargs -I {} bash -c "( git name-rev --no-undefined --name-only {} 2>/dev/null || echo {} )" \
+      | xargs git checkout; 
+  '';
+
 in
 {
   home.username = "andy";
@@ -48,6 +57,10 @@ in
     enable = true;
     userName = "Andy Scott";
     userEmail = "andy.g.scott@gmail.com";
+
+    aliases = {
+      tardis = "${git-tardis}/bin/git-tardis";
+    };
 
     signing = {
       signByDefault = true;
@@ -225,6 +238,7 @@ in
     pkgs.ripgrep
     pkgs.kitty
 
+    git-tardis
     gpom
   ];
 }
