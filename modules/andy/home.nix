@@ -37,7 +37,7 @@ let
     git --no-pager log --color -g --abbrev-commit --pretty='%C(auto)%h% D %C(blue)%cr%C(reset) %gs (%s)' \
       | fzf --ansi \
       | cut -d " " -f 1 \
-      | xargs -I {} bash -c "( git name-rev --no-undefined --name-only {} 2>/dev/null || echo {} )" \
+      | xargs -I {} bash -c "( git name-rev --refs 'heads/*' --no-undefined --name-only {} 2>/dev/null || echo {} )" \
       | xargs git checkout; 
   '';
 
