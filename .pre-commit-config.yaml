@@ -1,4 +1,3 @@
----
 repos:
   - repo: local
     hooks:
@@ -18,3 +17,8 @@ repos:
         language: system
         files: *nix-files
         pass_filenames: false
+      - id: yamlfmt
+        name: "[yaml]     yamlfmt"
+        entry: yamlfmt
+        language: system
+        types: [yaml]

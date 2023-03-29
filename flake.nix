@@ -74,6 +74,7 @@
               pre-commit
               shellcheck
               statix
+              yamlfmt
             ];
           };
         });
