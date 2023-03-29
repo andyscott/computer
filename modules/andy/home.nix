@@ -270,6 +270,7 @@ in
     pkgs.gnutar # tar
     pkgs.gnupg
     pkgs.moreutils # chronic
+    pkgs.neo-cowsay # cowsay/cowthink
     pkgs.openssh # ssh, ssh-keygen, ...
     pkgs.wget # wget
     pkgs.xz # xz
