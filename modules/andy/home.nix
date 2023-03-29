@@ -33,6 +33,44 @@ let
     ${pkgs.git}/bin/git pull origin "$branch"
   '';
 
+
+  git__plus = pkgs.symlinkJoin {
+    name = "git-with-stuff";
+    paths = [
+      (pkgs.resholve.writeScriptBin "git"
+        {
+          inputs = [ pkgs.git ];
+          interpreter = "none";
+          execer = [
+            ''cannot:${pkgs.git}/bin/git''
+          ];
+        } ''
+        #!${pkgs.bash}/bin/bash
+        shopt -s extglob
+        root="$(git rev-parse --show-toplevel)"
+        if [ -f "$root"/.git/refs/heads/main ]; then
+            from=master
+            to=main
+        else
+            from=main
+            to=master
+        fi
+
+        for arg; do
+          shift
+          case "$arg" in
+          "$from"*(^) ) set -- "$@" "$to''${arg/#$from}";;
+          *           ) set -- "$@" "$arg";;
+          esac
+        done
+
+        exec git "$@"
+      ''
+      )
+      pkgs.git
+    ];
+  };
+
   git-tardis = pkgs.writeShellScriptBin "git-tardis" ''
     git --no-pager log --color -g --abbrev-commit --pretty='%C(auto)%h% D %C(blue)%cr%C(reset) %gs (%s)' \
       | fzf --ansi \
@@ -55,6 +93,9 @@ in
 
   programs.git = {
     enable = true;
+
+    package = git__plus;
+
     userName = "Andy Scott";
     userEmail = "andy.g.scott@gmail.com";
 
@@ -148,12 +189,12 @@ in
       }
 
       function _prompt_git_status() {
-          git rev-parse 2>/dev/null || return
+          ${pkgs.git}/bin/git rev-parse 2>/dev/null || return
 
-          branch=$(command git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
+          branch=$(${pkgs.git}/bin/git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
 
           bits=(
-            $([[ -z "$(command git diff --no-ext-diff --quiet --exit-code)" ]] && _ansi green "⬢" || _ansi red "⬡")
+            $([[ -z "$(${pkgs.git}/bin/git diff --no-ext-diff --quiet --exit-code)" ]] && _ansi green "⬢" || _ansi red "⬡")
             $(_ansi cyan $branch)
           )
 
@@ -209,7 +250,7 @@ in
   # Base install of packages
   home.packages = [
     pkgs._1password
-    pkgs.gh
+    #pkgs.gh
 
     pkgs.atuin # shell history
     pkgs.babashka
@@ -223,7 +264,7 @@ in
     pkgs.lsd # lsd
     pkgs.findutils # find, xargs, ...
     pkgs.gawk # awk
-    pkgs.git # git
+    #_git # git
     pkgs.gnugrep # grep
     pkgs.gnused # sed
     pkgs.gnutar # tar
@@ -238,7 +279,7 @@ in
     pkgs.ripgrep
     pkgs.kitty
 
-    git-tardis
-    gpom
+    #git-tardis
+    #gpom
   ];
 }
