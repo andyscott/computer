@@ -250,7 +250,7 @@ in
   # Base install of packages
   home.packages = [
     pkgs._1password
-    #pkgs.gh
+    pkgs.gh
 
     pkgs.atuin # shell history
     pkgs.babashka
@@ -264,7 +264,6 @@ in
     pkgs.lsd # lsd
     pkgs.findutils # find, xargs, ...
     pkgs.gawk # awk
-    #_git # git
     pkgs.gnugrep # grep
     pkgs.gnused # sed
     pkgs.gnutar # tar
@@ -280,7 +279,7 @@ in
     pkgs.ripgrep
     pkgs.kitty
 
-    #git-tardis
-    #gpom
+    git-tardis
+    gpom
   ];
 }
