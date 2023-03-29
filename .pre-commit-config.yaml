@@ -6,9 +6,15 @@ repos:
         name: "[nix]      nixpkgs-fmt"
         entry: nixpkgs-fmt
         language: system
-        files: \.nix$
+        files: &nix-files \.nix$
       - id: shell-shellcheck
         name: "[shell]    shellcheck"
         entry: shellcheck --exclude=SC1071,SC1090,SC1091
         language: system
         types: [shell]
+      - id: statix
+        name: "[nix]      statix"
+        entry: statix fix
+        language: system
+        files: *nix-files
+        pass_filenames: false

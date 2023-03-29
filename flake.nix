@@ -49,7 +49,7 @@
           };
 
         in
-        (nixpkgs.lib.optionalAttrs (strings.hasSuffix "-darwin" system) rec {
+        nixpkgs.lib.optionalAttrs (strings.hasSuffix "-darwin" system) rec {
           packages.darwinConfigurations.default =
             let utils = import ./utils.nix { inherit (nixpkgs) lib; };
             in darwin.lib.darwinSystem {
@@ -70,12 +70,13 @@
 
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
+              nixpkgs-fmt
               pre-commit
               shellcheck
-              nixpkgs-fmt
+              statix
             ];
           };
-        }));
+        });
 
     in
     system-dependent // system-agnostic;
