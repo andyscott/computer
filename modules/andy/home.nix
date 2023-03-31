@@ -82,9 +82,18 @@ in
   programs.zsh = {
     enable = true;
     initExtra = '' 
+      _cat() {
+        if [ -t 1 ]; then
+          ${pkgs.bat}/bin/bat "$@"
+        else
+          # use regular cat in pipelines
+          command cat "$@"
+        fi
+      }
+
       _ls() {
         if [ -t 1 ]; then
-          lsd "$@"
+          ${pkgs.lsd}/bin/lsd "$@"
         else
           # use regular ls in pipelines
           command ls "$@"
@@ -173,6 +182,7 @@ in
     '';
 
     shellAliases = {
+      cat = "_cat";
       ls = "_ls";
       tree = "lsd --tree";
       gpom = "git pull origin main";
@@ -199,6 +209,7 @@ in
     pkgs.gh
 
     pkgs.atuin # shell history
+    pkgs.bat
     pkgs.babashka
     pkgs.coreutils # cat, date, md5sum, mkdir, mv, realpath, sha1sum, touch, ...
     pkgs.moreutils # sponge, chronic, ...
