@@ -189,6 +189,22 @@ in
     };
   };
 
+  programs.kitty = {
+    enable = true;
+
+    font = {
+      package = pkgs.fira-code;
+      name = "Fira Code";
+      size = 13.0;
+    };
+
+    extraConfig = ''
+      confirm_os_window_close 0
+      allow_remote_control yes
+      enabled_layouts *
+    '';
+  };
+
   programs.bash = {
     enable = true;
   };
@@ -234,7 +250,6 @@ in
     pkgs.zoxide # zoxide
     pkgs.fzf
     pkgs.ripgrep
-    pkgs.kitty
 
     andy-bin.git-tardis
   ];
