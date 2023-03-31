@@ -167,8 +167,6 @@ in
       setopt prompt_subst
       PROMPT=' $(_prompt) ';
 
-
-      eval "$(atuin init zsh)"
       eval "$(zoxide init zsh)"
 
       # Base16 Shell
@@ -187,6 +185,13 @@ in
       tree = "lsd --tree";
       gpom = "git pull origin main";
     };
+  };
+
+  # shell history program
+  programs.atuin = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
   };
 
   programs.kitty = {
@@ -223,8 +228,6 @@ in
   home.packages = [
     pkgs._1password
     pkgs.gh
-
-    pkgs.atuin # shell history
     pkgs.bat
     pkgs.babashka
     pkgs.coreutils # cat, date, md5sum, mkdir, mv, realpath, sha1sum, touch, ...
