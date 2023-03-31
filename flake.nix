@@ -67,16 +67,7 @@
             };
 
           defaultPackage = packages.darwinConfigurations.default.system;
-
-          devShells.default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              nixpkgs-fmt
-              pre-commit
-              shellcheck
-              statix
-              yamlfmt
-            ];
-          };
+          devShells.default = pkgs.callPackage ./dev-shell-default.nix { };
         });
 
     in

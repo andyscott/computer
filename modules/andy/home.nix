@@ -47,23 +47,23 @@ let
         } ''
         #!${pkgs.bash}/bin/bash
         shopt -s extglob
-        root="$(git rev-parse --show-toplevel)"
-        if [ -f "$root"/.git/refs/heads/main ]; then
-            from=master
-            to=main
-        else
-            from=main
-            to=master
+        if root="$(git rev-parse --show-toplevel 2> /dev/null)"; then
+          if [ -f "$root"/.git/refs/heads/main ]; then
+              from=master
+              to=main
+          else
+              from=main
+              to=master
+          fi
+
+          for arg; do
+            shift
+            case "$arg" in
+            "$from"*(^) ) set -- "$@" "$to''${arg/#$from}";;
+            *           ) set -- "$@" "$arg";;
+            esac
+          done
         fi
-
-        for arg; do
-          shift
-          case "$arg" in
-          "$from"*(^) ) set -- "$@" "$to''${arg/#$from}";;
-          *           ) set -- "$@" "$arg";;
-          esac
-        done
-
         exec git "$@"
       ''
       )
