@@ -167,8 +167,6 @@ in
       setopt prompt_subst
       PROMPT=' $(_prompt) ';
 
-      eval "$(zoxide init zsh)"
-
       # Base16 Shell
 
       source '${base16-shell}/profile_helper.sh'
@@ -190,8 +188,10 @@ in
   # shell history program
   programs.atuin = {
     enable = true;
-    enableBashIntegration = true;
-    enableZshIntegration = true;
+  };
+
+  programs.bash = {
+    enable = true;
   };
 
   programs.kitty = {
@@ -210,7 +210,7 @@ in
     '';
   };
 
-  programs.bash = {
+  programs.zoxide = {
     enable = true;
   };
 
@@ -250,7 +250,6 @@ in
     pkgs.wget # wget
     pkgs.xz # xz
     pkgs.python3 # python3
-    pkgs.zoxide # zoxide
     pkgs.fzf
     pkgs.ripgrep
 
