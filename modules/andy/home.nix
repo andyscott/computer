@@ -23,62 +23,7 @@ let
 
   git-gpg-key = "C0012AF12CAF6F92";
 
-  gpom = pkgs.writeShellScriptBin "gpom" ''
-    root="$(${pkgs.git}/bin/git rev-parse --show-toplevel)"
-    if [ -f "$root"/.git/refs/heads/main ]; then
-      branch=main
-    else
-      branch=master
-    fi
-    ${pkgs.git}/bin/git pull origin "$branch"
-  '';
-
-
-  git__plus = pkgs.symlinkJoin {
-    name = "git-with-stuff";
-    paths = [
-      (pkgs.resholve.writeScriptBin "git"
-        {
-          inputs = [ pkgs.git ];
-          interpreter = "none";
-          execer = [
-            ''cannot:${pkgs.git}/bin/git''
-          ];
-        } ''
-        #!${pkgs.bash}/bin/bash
-        shopt -s extglob
-        if root="$(git rev-parse --show-toplevel 2> /dev/null)"; then
-          if [ -f "$root"/.git/refs/heads/main ]; then
-              from=master
-              to=main
-          else
-              from=main
-              to=master
-          fi
-
-          for arg; do
-            shift
-            case "$arg" in
-            "$from"*(^) ) set -- "$@" "$to''${arg/#$from}";;
-            *           ) set -- "$@" "$arg";;
-            esac
-          done
-        fi
-        exec git "$@"
-      ''
-      )
-      pkgs.git
-    ];
-  };
-
-  git-tardis = pkgs.writeShellScriptBin "git-tardis" ''
-    git --no-pager log --color -g --abbrev-commit --pretty='%C(auto)%h% D %C(blue)%cr%C(reset) %gs (%s)' \
-      | fzf --ansi \
-      | cut -d " " -f 1 \
-      | xargs -I {} bash -c "( git name-rev --refs 'heads/*' --no-undefined --name-only {} 2>/dev/null || echo {} )" \
-      | xargs git checkout; 
-  '';
-
+  andy-bin = pkgs.callPackage ./bin.nix { };
 in
 {
   home.username = "andy";
@@ -94,13 +39,13 @@ in
   programs.git = {
     enable = true;
 
-    package = git__plus;
+    package = andy-bin.git;
 
     userName = "Andy Scott";
     userEmail = "andy.g.scott@gmail.com";
 
     aliases = {
-      tardis = "${git-tardis}/bin/git-tardis";
+      tardis = "${andy-bin.git-tardis}/bin/git-tardis";
     };
 
     signing = {
@@ -230,6 +175,7 @@ in
     shellAliases = {
       ls = "_ls";
       tree = "lsd --tree";
+      gpom = "git pull origin main";
     };
   };
 
@@ -279,7 +225,6 @@ in
     pkgs.ripgrep
     pkgs.kitty
 
-    git-tardis
-    gpom
+    andy-bin.git-tardis
   ];
 }
