@@ -6,7 +6,7 @@
     name = "andy";
     home = "/Users/andy";
   };
-  home-manager.users.andy = { pkgs, ... }: import ./home.nix { inherit pkgs; };
+  home-manager.users.andy = { config, lib, pkgs, ... }: import ./home.nix { inherit config lib pkgs; };
 
   programs.gnupg.agent = {
     enable = true;

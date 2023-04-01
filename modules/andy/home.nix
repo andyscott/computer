@@ -1,10 +1,6 @@
-{ pkgs }:
+{ config, lib, pkgs }:
 
 let
-  darwinShellInit = ''
-    export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
-  '';
-
   base16-shell = pkgs.stdenv.mkDerivation rec {
     name = "base16-shell";
 
@@ -25,140 +21,178 @@ let
 
   andy-bin = pkgs.callPackage ./bin.nix { };
 in
-{
-  home.username = "andy";
-  home.homeDirectory = "/Users/andy";
+lib.mkMerge [
+  {
+    home.username = "andy";
+    home.homeDirectory = "/Users/andy";
 
-  # Base install of packages
-  home.packages = [
-    pkgs._1password
-    pkgs.gh
-    pkgs.bat
-    pkgs.babashka
-    pkgs.coreutils # cat, date, md5sum, mkdir, mv, realpath, sha1sum, touch, ...
-    pkgs.moreutils # sponge, chronic, ...
-    pkgs.jq # jq
-    pkgs.yq-go # yq but the better version
-    pkgs.curl # curl
-    pkgs.diffutils # diff
-    pkgs.nixpkgs-fmt
-    pkgs.lsd # lsd
-    pkgs.findutils # find, xargs, ...
-    pkgs.gawk # awk
-    pkgs.gnugrep # grep
-    pkgs.gnused # sed
-    pkgs.gnutar # tar
-    pkgs.gnupg
-    pkgs.moreutils # chronic
-    pkgs.neo-cowsay # cowsay/cowthink
-    pkgs.openssh # ssh, ssh-keygen, ...
-    pkgs.wget # wget
-    pkgs.xz # xz
-    pkgs.python3 # python3
-    pkgs.fzf
-    pkgs.ripgrep
+    # Base install of packages
+    home.packages = [
+      pkgs._1password
+      pkgs.gh
+      pkgs.babashka
+      pkgs.coreutils # cat, date, md5sum, mkdir, mv, realpath, sha1sum, touch, ...
+      pkgs.moreutils # sponge, chronic, ...
+      pkgs.jq # jq
+      pkgs.yq-go # yq but the better version
+      pkgs.curl # curl
+      pkgs.diffutils # diff
+      pkgs.nixpkgs-fmt
+      pkgs.lsd # lsd
+      pkgs.findutils # find, xargs, ...
+      pkgs.gawk # awk
+      pkgs.gnugrep # grep
+      pkgs.gnused # sed
+      pkgs.gnutar # tar
+      pkgs.gnupg
+      pkgs.moreutils # chronic
+      pkgs.neo-cowsay # cowsay/cowthink
+      pkgs.openssh # ssh, ssh-keygen, ...
+      pkgs.wget # wget
+      pkgs.xz # xz
+      pkgs.python3 # python3
+      pkgs.fzf
+      pkgs.ripgrep
 
-    andy-bin.git-tardis
-  ];
+      andy-bin.git-tardis
+    ];
 
-  # without this, nix-darwin managed GPG won't be able to generate keys
-  # and do other important work
-  home.file.".gnupg/gpg-agent.conf".text = ''
-    allow-preset-passphrase
-    pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
-  '';
-
-  # This value determines the Home Manager release that your
-  # configuration is compatible with. This helps avoid breakage
-  # when a new Home Manager release introduces backwards
-  # incompatible changes.
-  #
-  # You can update Home Manager without changing this value. See
-  # the Home Manager release notes for a list of state version
-  # changes in each release.
-  home.stateVersion = "21.11";
-
-  # shell history program
-  programs.atuin = {
-    enable = true;
-  };
-
-  programs.bash = {
-    enable = true;
-  };
-
-  programs.git = {
-    enable = true;
-    package = andy-bin.git;
-    userName = "Andy Scott";
-    userEmail = "andy.g.scott@gmail.com";
-    aliases = {
-      tardis = "${andy-bin.git-tardis}/bin/git-tardis";
-    };
-    signing = {
-      signByDefault = true;
-      key = git-gpg-key;
-    };
-    extraConfig = {
-      color = {
-        status = "auto";
-        diff = "auto";
-        branch = "auto";
-        interactive = "auto";
-        ui = "auto";
-        sh = "auto";
-      };
-      init.defaultBranch = "main";
-      github.user = "andyscott";
-      url."https://github".insteadOf = "git://git@github.com";
-    };
-  };
-
-  programs.kitty = {
-    enable = true;
-
-    font = {
-      package = pkgs.fira-code;
-      name = "Fira Code";
-      size = 13.0;
-    };
-
-    extraConfig = ''
-      confirm_os_window_close 0
-      allow_remote_control yes
-      enabled_layouts *
+    # without this, nix-darwin managed GPG won't be able to generate keys
+    # and do other important work
+    home.file.".gnupg/gpg-agent.conf".text = ''
+      allow-preset-passphrase
+      pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
     '';
-  };
 
-  # Let Home Manager install and manage itself.
-  programs.home-manager = {
-    enable = true;
-  };
+    # This value determines the Home Manager release that your
+    # configuration is compatible with. This helps avoid breakage
+    # when a new Home Manager release introduces backwards
+    # incompatible changes.
+    #
+    # You can update Home Manager without changing this value. See
+    # the Home Manager release notes for a list of state version
+    # changes in each release.
+    home.stateVersion = "21.11";
+  }
+  {
+    # shell history program
+    programs.atuin = {
+      enable = true;
+    };
+  }
+  {
+    programs.bash = {
+      enable = true;
+    };
+  }
+  {
+    programs.bat = {
+      enable = true;
+      extraPackages = with pkgs.bat-extras; [
+        batdiff
+        batman
+        batgrep
+        batwatch
+      ];
+    };
+    programs.zsh = lib.mkIf config.programs.bat.enable {
+      initExtra = ''
+        _cat_is_bat() {
+          if [ -t 1 ]; then
+            ${pkgs.bat}/bin/bat "$@"
+          else
+            # use regular cat in pipelines
+            command cat "$@"
+          fi
+        }
+      '';
 
-  programs.zoxide = {
-    enable = true;
-  };
+      shellAliases = {
+        cat = "_cat_is_bat";
+      };
+    };
+  }
+  {
+    programs.git = {
+      enable = true;
+      package = andy-bin.git;
+      userName = "Andy Scott";
+      userEmail = "andy.g.scott@gmail.com";
+      aliases = {
+        tardis = "${andy-bin.git-tardis}/bin/git-tardis";
+      };
+      signing = {
+        signByDefault = true;
+        key = git-gpg-key;
+      };
+      extraConfig = {
+        color = {
+          status = "auto";
+          diff = "auto";
+          branch = "auto";
+          interactive = "auto";
+          ui = "auto";
+          sh = "auto";
+        };
+        init.defaultBranch = "main";
+        github.user = "andyscott";
+        url."https://github".insteadOf = "git://git@github.com";
+      };
+    };
+  }
+  {
+    programs.kitty = {
+      enable = true;
 
-  programs.zsh = {
-    enable = true;
-    initExtra = '' 
-      _cat() {
-        if [ -t 1 ]; then
-          ${pkgs.bat}/bin/bat "$@"
-        else
-          # use regular cat in pipelines
-          command cat "$@"
-        fi
-      }
+      font = {
+        package = pkgs.fira-code;
+        name = "Fira Code";
+        size = 13.0;
+      };
 
-      _ls() {
-        if [ -t 1 ]; then
-          ${pkgs.lsd}/bin/lsd "$@"
-        else
-          # use regular ls in pipelines
-          command ls "$@"
-        fi
-      }
+      extraConfig = ''
+        confirm_os_window_close 0
+        allow_remote_control yes
+        enabled_layouts *
+      '';
+    };
+  }
+  {
+    programs.lsd = {
+      enable = true;
+    };
+    programs.zsh = lib.mkIf config.programs.lsd.enable {
+      initExtra = ''
+        _ls_is_lsd() {
+          if [ -t 1 ]; then
+            ${pkgs.lsd}/bin/lsd "$@"
+          else
+            # use regular ls in pipelines
+            command ls "$@"
+          fi
+        }
+      '';
+
+      shellAliases = {
+        ls = "_ls_is_lsd";
+      };
+    };
+  }
+  {
+    # Let Home Manager install and manage itself.
+    programs.home-manager = {
+      enable = true;
+    };
+  }
+  {
+    programs.zoxide = {
+      enable = true;
+    };
+  }
+  {
+    programs.zsh = {
+      enable = true;
+      initExtra = '' 
 
       unset PS1
       unset PROMPT
@@ -237,12 +271,11 @@ in
       #   | ${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase --preset ${git-gpg-key}
     '';
 
-    shellAliases = {
-      cat = "_cat";
-      ls = "_ls";
-      tree = "lsd --tree";
-      gpom = "git pull origin main";
+      shellAliases = {
+        tree = "lsd --tree";
+        gpom = "git pull origin main";
+      };
     };
-  };
 
-}
+  }
+]
