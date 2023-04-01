@@ -45,13 +45,11 @@ lib.mkMerge [
       pkgs.gnused # sed
       pkgs.gnutar # tar
       pkgs.gnupg
-      pkgs.moreutils # chronic
       pkgs.neo-cowsay # cowsay/cowthink
       pkgs.openssh # ssh, ssh-keygen, ...
       pkgs.wget # wget
       pkgs.xz # xz
       pkgs.python3 # python3
-      pkgs.fzf
       pkgs.ripgrep
 
       andy-bin.git-tardis
@@ -110,6 +108,11 @@ lib.mkMerge [
       shellAliases = {
         cat = "_cat_is_bat";
       };
+    };
+  }
+  {
+    programs.fzf = {
+      enable = true;
     };
   }
   {
