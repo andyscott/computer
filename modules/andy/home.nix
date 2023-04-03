@@ -38,7 +38,6 @@ lib.mkMerge [
       pkgs.curl # curl
       pkgs.diffutils # diff
       pkgs.nixpkgs-fmt
-      pkgs.lsd # lsd
       pkgs.findutils # find, xargs, ...
       pkgs.gawk # awk
       pkgs.gnugrep # grep
