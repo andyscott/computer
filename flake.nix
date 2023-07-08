@@ -18,9 +18,12 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    git-linear.url = "github:andyscott/git-linear";
+    git-linear.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs @ { self, flake-utils, nixpkgs, home-manager, darwin }:
+  outputs = inputs @ { self, flake-utils, nixpkgs, home-manager, darwin, git-linear }:
     with nixpkgs.lib;
     let
       nixpkgsConfig = {
@@ -45,14 +48,31 @@
             inherit (nixpkgsConfig) config;
             overlays = [
               system-agnostic.overlays.apple-m1-x86
+              (self: super: {
+                git-linear = git-linear.packages.${system}.default;
+              })
             ];
           };
 
         in
         nixpkgs.lib.optionalAttrs (strings.hasSuffix "-darwin" system) rec {
           packages.darwinConfigurations.default =
-            let utils = import ./utils.nix { inherit (nixpkgs) lib; };
-            in darwin.lib.darwinSystem {
+            let
+              utils = import ./utils.nix { inherit (nixpkgs) lib; };
+
+              linuxSystem = builtins.replaceStrings [ "darwin" ] [ "linux" ] system;
+
+              darwin-builder = nixpkgs.lib.nixosSystem {
+                system = linuxSystem;
+
+                modules = [
+                  "${nixpkgs}/nixos/modules/profiles/macos-builder.nix"
+                  { virtualisation.host.pkgs = pkgs; }
+                ];
+              };
+
+            in
+            darwin.lib.darwinSystem {
               inherit system;
               modules = [
                 home-manager.darwinModules.home-manager
