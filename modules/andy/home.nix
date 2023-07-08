@@ -20,6 +20,24 @@ let
   git-gpg-key = "C0012AF12CAF6F92";
 
   andy-bin = pkgs.callPackage ./bin.nix { };
+
+  oauth2l = pkgs.buildGoModule rec {
+    pname = "oauth2l";
+    version = "21ab08b88b2e8d6b6ac0b0cc1560368a1c87b989";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "google";
+      repo = pname;
+      rev = version;
+      hash = "sha256-vhotf5yDt/c4yMmwDAP8uT3sRFaL1AATRgEKTe/Oq7c=";
+    };
+
+    doCheck = false;
+
+    vendorHash = null;
+
+    buildInputs = [ ];
+  };
 in
 lib.mkMerge [
   {
@@ -40,6 +58,7 @@ lib.mkMerge [
       pkgs.nixpkgs-fmt
       pkgs.findutils # find, xargs, ...
       pkgs.gawk # awk
+      pkgs.glow # tui markdown reader
       pkgs.gnugrep # grep
       pkgs.gnused # sed
       pkgs.gnutar # tar
@@ -50,9 +69,20 @@ lib.mkMerge [
       pkgs.xz # xz
       pkgs.python3 # python3
       pkgs.ripgrep
+      pkgs.zellij
+      pkgs.helix
+      oauth2l
 
+      pkgs.git-linear
       andy-bin.git-tardis
     ];
+
+    programs.zsh = {
+      shellAliases = {
+        glb = "git linear branch";
+        glo = "git linear open";
+      };
+    };
 
     # without this, nix-darwin managed GPG won't be able to generate keys
     # and do other important work
@@ -122,6 +152,7 @@ lib.mkMerge [
       userEmail = "andy.g.scott@gmail.com";
       aliases = {
         tardis = "${andy-bin.git-tardis}/bin/git-tardis";
+        linear = "${pkgs.git-linear}/bin/git-linear";
       };
       signing = {
         signByDefault = true;

@@ -16,6 +16,10 @@
       ];
     in
     ''
+      auto-optimise-store = true
       experimental-features = ${pkgs.lib.concatStringsSep " " experimental-features}
+      build-users-group = nixbld
+      bash-prompt-prefix = (nix:$name)\040
+      extra-nix-path = nixpkgs=flake:nixpkgs
     '';
 }
