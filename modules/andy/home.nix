@@ -38,6 +38,29 @@ let
 
     buildInputs = [ ];
   };
+
+  python-vipaccess = pkgs.python3Packages.buildPythonPackage rec {
+    name = "python-vipaccess";
+    version = "0.0.0";
+    src = pkgs.fetchFromGitHub {
+      owner = "cyrozap";
+      repo = "${name}";
+      rev = "cc4366f7bce41d5ebce64ae8d86cc71e5eda5703";
+      sha256 = "sha256-V1jYoXa5WZFs7hRwMRDlzaWaUEGcyuHcD0F4IUBw3AY=";
+    };
+
+    buildInputs = with pkgs.python3Packages; [
+      nose2
+    ];
+
+    doCheck = false;
+
+    propagatedBuildInputs = with pkgs.python3Packages; [
+      oath
+      requests
+      pycryptodome
+    ];
+  };
 in
 lib.mkMerge [
   {
@@ -72,6 +95,7 @@ lib.mkMerge [
       pkgs.zellij
       pkgs.helix
       oauth2l
+      python-vipaccess
 
       pkgs.git-linear
       andy-bin.git-tardis
