@@ -251,6 +251,8 @@ lib.mkMerge [
       enable = true;
       initExtra = '' 
 
+      setopt completealiases
+
       unset PS1
       unset PROMPT
 
