@@ -7,13 +7,13 @@
       type = "github";
       owner = "NixOS";
       repo = "nixpkgs";
-      rev = "0d15ddddc54e04bc34065a9e47024a2c90063f47";
+      rev = "3a50c2dac5d0edd8b1e3be5894217db793a7a7a3";
     };
     home-manager = {
       type = "github";
       owner = "nix-community";
       repo = "home-manager";
-      rev = "95201931f2e733705296d1d779e70793deaeb909";
+      rev = "8aef005d44ee726911e9f793495bb40f2fbf5a05";
     };
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     darwin.url = "github:lnl7/nix-darwin";

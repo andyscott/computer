@@ -94,6 +94,10 @@ lib.mkMerge [
       pkgs.ripgrep
       pkgs.zellij
       pkgs.helix
+      pkgs.julia_18-bin
+      pkgs.sl
+      pkgs.tig
+      pkgs.gti
       oauth2l
       python-vipaccess
 
