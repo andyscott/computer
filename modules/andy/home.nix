@@ -216,6 +216,10 @@ lib.mkMerge [
         allow_remote_control yes
         enabled_layouts *
       '';
+
+      # know to break prompts... this breaks mine!
+      # https://github.com/kovidgoyal/kitty/blob/6a3529b7c2cee78d9ebb564765308babfb3eda8f/shell-integration/zsh/kitty-integration#L204
+      shellIntegration.mode = "no-prompt-mark";
     };
   }
   {
@@ -323,6 +327,10 @@ lib.mkMerge [
 
       setopt prompt_subst
       PROMPT=' $(_prompt) ';
+
+      precmd() {
+        print -Pn "\e]133;A\e\\"
+      }
 
       # Base16 Shell
 

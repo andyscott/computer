@@ -13,6 +13,8 @@
     enableSSHSupport = true;
   };
 
+  programs.zsh.enable = true;
+
   # touch ID when sudo'ing
   security.pam.enableSudoTouchIdAuth = true;
 
