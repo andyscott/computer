@@ -257,6 +257,7 @@ lib.mkMerge [
   {
     programs.zsh = {
       enable = true;
+      enableCompletion = true;
       initExtra = '' 
 
       setopt completealiases
