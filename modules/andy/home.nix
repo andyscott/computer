@@ -179,12 +179,12 @@ lib.mkMerge [
         _completions_hook() {
           trap -- ''' SIGINT;
           if (( ''${+DIRENV_FILE} )); then
-            fpath_before=$fpath
+            local fpath_before=$fpath
             typeset -xUT XDG_DATA_DIRS xdg_data_dirs
+            local xdg_data_dir
             for xdg_data_dir in $xdg_data_dirs; do
-                site_functions="$xdg_data_dir"/zsh/site-functions
-                if [ -d "$site_functions" ]; then
-                    fpath+=("$site_functions")
+                if [ -d "$xdg_data_dir"/zsh/site-functions ]; then
+                    fpath+=("$xdg_data_dir"/zsh/site-functions)
                 fi
             done
             if [[ $fpath != $fpath_before ]]; then
