@@ -3,22 +3,11 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs = {
-      type = "github";
-      owner = "NixOS";
-      repo = "nixpkgs";
-      rev = "3a50c2dac5d0edd8b1e3be5894217db793a7a7a3";
-    };
-    home-manager = {
-      type = "github";
-      owner = "nix-community";
-      repo = "home-manager";
-      rev = "8aef005d44ee726911e9f793495bb40f2fbf5a05";
-    };
+    nixpkgs.url = "github:NixOS/nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-
     git-linear.url = "github:andyscott/git-linear";
     git-linear.inputs.nixpkgs.follows = "nixpkgs";
   };
