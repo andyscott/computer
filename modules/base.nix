@@ -16,7 +16,7 @@
       ];
     in
     ''
-      auto-optimise-store = true
+      # auto-optimise-store = true # disabled per https://github.com/NixOS/nix/issues/7273
       experimental-features = ${pkgs.lib.concatStringsSep " " experimental-features}
       build-users-group = nixbld
       bash-prompt-prefix = (nix:$name)\040

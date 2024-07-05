@@ -17,6 +17,10 @@ let
     '';
   };
 
+  alias = name: actual: pkgs.writeShellScriptBin name ''
+    exec ${actual} "$@"
+  '';
+
   git-gpg-key = "C0012AF12CAF6F92";
 
   andy-bin = pkgs.callPackage ./bin.nix { };
@@ -70,9 +74,11 @@ lib.mkMerge [
     # Base install of packages
     home.packages = [
       pkgs._1password
+      (alias "bazel" "${pkgs.bazelisk}/bin/bazelisk")
+      pkgs.bazel-buildtools
       pkgs.gh
-      pkgs.babashka
       pkgs.coreutils # cat, date, md5sum, mkdir, mv, realpath, sha1sum, touch, ...
+      pkgs.difftastic
       pkgs.moreutils # sponge, chronic, ...
       pkgs.jq # jq
       pkgs.yq-go # yq but the better version
@@ -94,10 +100,9 @@ lib.mkMerge [
       pkgs.ripgrep
       pkgs.zellij
       pkgs.helix
-      pkgs.julia_18-bin
-      pkgs.sl
       pkgs.tig
       pkgs.gti
+      pkgs.tokei
       oauth2l
       python-vipaccess
 
@@ -208,6 +213,35 @@ lib.mkMerge [
     programs.fzf = {
       enable = true;
     };
+    programs.zsh = lib.mkIf config.programs.fzf.enable {
+      # zsh init from https://blog.jez.io/fzf-bazel/
+      initExtra = ''
+        _fzf_complete_bazel_test() {
+          _fzf_complete '-m' "$@" < <(command bazel query \
+            "kind('(test|test_suite) rule', //...)" 2> /dev/null)
+        }
+
+        _fzf_complete_bazel() {
+          local tokens
+          tokens=(''${(z)LBUFFER})
+
+          if [ ''${#tokens[@]} -ge 3 ] && [ "''${tokens[2]}" = "test" ]; then
+            _fzf_complete_bazel_test "$@"
+          else
+            # Might be able to make this better someday, by listing all repositories
+            # that have been configured in a WORKSPACE.
+            # See https://stackoverflow.com/questions/46229831/ or just run
+            #     bazel query //external:all
+            # This is the reason why things like @ruby_2_6//:ruby.tar.gz don't show up
+            # in the output: they're not a dep of anything in //..., but they are deps
+            # of @ruby_2_6//...
+            _fzf_complete '-m' "$@" < <(command bazel query --keep_going \
+              --noshow_progress \
+              "kind('(binary rule)|(generated file)', deps(//...))" 2> /dev/null)
+          fi
+        }
+      '';
+    };
   }
   {
     programs.git = {
@@ -236,6 +270,7 @@ lib.mkMerge [
         github.user = "andyscott";
         url."https://github".insteadOf = "git://git@github.com";
       };
+      #difftastic.enable = true;
     };
   }
   {
