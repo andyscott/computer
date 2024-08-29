@@ -10,9 +10,11 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     git-linear.url = "github:andyscott/git-linear";
     git-linear.inputs.nixpkgs.follows = "nixpkgs";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs @ { self, flake-utils, nixpkgs, home-manager, darwin, git-linear }:
+  outputs = inputs @ { self, flake-utils, nixpkgs, home-manager, darwin, git-linear, emacs-overlay }:
     with nixpkgs.lib;
     let
       nixpkgsConfig = {
@@ -40,6 +42,7 @@
               (self: super: {
                 git-linear = git-linear.packages.${system}.default;
               })
+              (import emacs-overlay)
             ];
           };
 

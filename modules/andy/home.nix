@@ -73,6 +73,10 @@ lib.mkMerge [
 
     # Base install of packages
     home.packages = [
+      andy-bin.hass
+      pkgs.graphite-cli
+      pkgs.dive
+      pkgs.kubie
       pkgs._1password
       (alias "bazel" "${pkgs.bazelisk}/bin/bazelisk")
       pkgs.bazel-buildtools
@@ -207,6 +211,12 @@ lib.mkMerge [
           chpwd_functions=( ''${chpwd_functions[@]} _completions_hook )
         fi
       '';
+    };
+  }
+  {
+    programs.emacs = {
+      enable = true;
+      package = pkgs.callPackage ./emacs.nix { };
     };
   }
   {

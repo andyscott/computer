@@ -49,4 +49,35 @@ rec {
       | xargs -I {} bash -c "( git name-rev --refs 'heads/*' --no-undefined --name-only {} 2>/dev/null || echo {} )" \
       | xargs git checkout; 
   '';
+
+  hass = pkgs.writeShellScriptBin "hass" ''
+    if [ $# -lt 1 ]; then
+      exit 1
+    fi
+    
+    export HASS_TOKEN=$(
+      ${pkgs._1password}/bin/op item get \
+        --account my.1password.com \
+        'Office HASS Token' \
+        --fields credential
+    )
+
+    case "$1" in
+    toggle-office)
+      ${pkgs.curl}/bin/curl \
+        -H "Authorization: Bearer $HASS_TOKEN" \
+        -H "Content-Type: application/json" \
+        --json '{"entity_id": "light.office"}' \
+        http://office.local/api/services/light/toggle
+      ;;
+    toggle-ring-light)
+      ${pkgs.curl}/bin/curl \
+        -H "Authorization: Bearer $HASS_TOKEN" \
+        -H "Content-Type: application/json" \
+        --json '{"entity_id": "light.ring_light"}' \
+        http://office.local/api/services/light/toggle
+      ;;
+    esac
+  '';
+
 }
