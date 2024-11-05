@@ -47,10 +47,10 @@ let
     name = "python-vipaccess";
     version = "0.0.0";
     src = pkgs.fetchFromGitHub {
-      owner = "cyrozap";
+      owner = "dlenski";
       repo = "${name}";
-      rev = "cc4366f7bce41d5ebce64ae8d86cc71e5eda5703";
-      sha256 = "sha256-V1jYoXa5WZFs7hRwMRDlzaWaUEGcyuHcD0F4IUBw3AY=";
+      rev = "9f49da31664e31608b2604e12768995368f7dfc7";
+      sha256 = "sha256-J9HKwkJStTZ6zm4u100+DSuxIbn4/kiGu/uAE8P/ALg=";
     };
 
     buildInputs = with pkgs.python3Packages; [
@@ -73,6 +73,10 @@ lib.mkMerge [
 
     # Base install of packages
     home.packages = [
+      (pkgs.google-cloud-sdk.withExtraComponents [
+        pkgs.google-cloud-sdk.components.gke-gcloud-auth-plugin
+      ])
+      pkgs.go
       andy-bin.hass
       pkgs.graphite-cli
       pkgs.dive
@@ -153,7 +157,9 @@ lib.mkMerge [
     programs.bat = {
       enable = true;
       extraPackages = with pkgs.bat-extras; [
-        batdiff
+        (batdiff.overrideAttrs (old: {
+          doCheck = false;
+        }))
         batman
         batgrep
         batwatch
@@ -215,7 +221,7 @@ lib.mkMerge [
   }
   {
     programs.emacs = {
-      enable = true;
+      #enable = true;
       package = pkgs.callPackage ./emacs.nix { };
     };
   }

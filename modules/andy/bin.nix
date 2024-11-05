@@ -55,12 +55,14 @@ rec {
       exit 1
     fi
     
-    export HASS_TOKEN=$(
+    hass_token_file=~/.hass_office_token
+    if [ ! -f "$hass_token_file" ]; then
       ${pkgs._1password}/bin/op item get \
-        --account my.1password.com \
+        --account V7K6KBP2URA3HEJMZNEZLO6S3U \
         'Office HASS Token' \
-        --fields credential
-    )
+        --fields credential > "$hass_token_file"
+    fi
+    export HASS_TOKEN="$(cat "$hass_token_file")"
 
     case "$1" in
     toggle-office)
