@@ -12,7 +12,7 @@ let
 
 
   /*
-  dockutil = with (import <nixpkgs> { });
+    dockutil = with (import <nixpkgs> { });
     derivation {
       name = "dockutil-2.0.5";
       builder = "${bash}/bin/bash";

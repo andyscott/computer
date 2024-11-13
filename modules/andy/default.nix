@@ -15,10 +15,10 @@ let user = "andy"; in
   home-manager.users.${user} = { config, lib, pkgs, ... }: import ./home.nix { inherit config lib pkgs; };
 
   /*
-  programs.gnupg.agent = {
+    programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
-  };
+    };
   */
 
   programs.zsh.enable = true;
