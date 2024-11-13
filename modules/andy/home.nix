@@ -127,9 +127,12 @@ lib.mkMerge [
 
     # without this, nix-darwin managed GPG won't be able to generate keys
     # and do other important work
+    programs.gpg = {
+      enable = true;
+    };
     home.file.".gnupg/gpg-agent.conf".text = ''
       allow-preset-passphrase
-      pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
+      pinentry-program ${pkgs.pinentry_mac}/bin/pinentry-mac
     '';
 
     # This value determines the Home Manager release that your
@@ -425,10 +428,6 @@ lib.mkMerge [
 
       source '${base16-shell}/profile_helper.sh'
       base16_rebecca
-
-      # eval "$(${pkgs._1password}/bin/op signin)"
-      # ${pkgs._1password}/bin/op item get "Git GPG Key" --fields passphrase \
-      #   | ${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase --preset ${git-gpg-key}
     '';
 
       shellAliases = {

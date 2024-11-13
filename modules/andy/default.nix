@@ -1,17 +1,25 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
+
+let user = "andy"; in
 # andy's darwin customizations
 {
-  users.users.andy = {
-    name = "andy";
-    home = "/Users/andy";
-  };
-  home-manager.users.andy = { config, lib, pkgs, ... }: import ./home.nix { inherit config lib pkgs; };
+  imports = [
+    ./dock.nix
+  ];
 
+  users.users.${user} = {
+    name = user;
+    home = "/Users/${user}";
+  };
+  home-manager.users.${user} = { config, lib, pkgs, ... }: import ./home.nix { inherit config lib pkgs; };
+
+  /*
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
   };
+  */
 
   programs.zsh.enable = true;
 
@@ -65,4 +73,30 @@
 
   system.defaults.finder._FXShowPosixPathInTitle = true;
   system.defaults.finder.FXEnableExtensionChangeWarning = false;
+
+  local = {
+    dock.enable = true;
+    dock.entries = [
+      { path = "/Applications/Arc.app/"; }
+      { path = "/Applications/Spotify.app/"; }
+      {
+        path = "/Users/${user}/Downloads/";
+        section = "others";
+        options = "--sort name --view grid --display stack";
+      }
+      #{ path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
+      /*
+      {
+        path = "${config.users.users.${user}.home}/.local/share/";
+        section = "others";
+        options = "--sort name --view grid --display folder";
+      }
+      {
+        path = "${config.users.users.${user}.home}/.local/share/downloads";
+        section = "others";
+        options = "--sort name --view grid --display stack";
+      }
+      */
+    ];
+  };
 }
