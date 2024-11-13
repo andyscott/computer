@@ -428,6 +428,8 @@ lib.mkMerge [
 
       source '${base16-shell}/profile_helper.sh'
       base16_rebecca
+
+      ${andy-bin.setup-gpg-keys}/bin/setup-gpg-keys
     '';
 
       shellAliases = {

@@ -82,4 +82,37 @@ rec {
     esac
   '';
 
+  setup-gpg-keys = pkgs.resholve.writeScriptBin "setup-gpg-keys"
+    {
+      inputs = with pkgs; [
+        gnupg
+        "${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase"
+        _1password
+        jq
+      ];
+      interpreter = "${pkgs.bash}/bin/bash";
+      execer = [
+        ''cannot:${pkgs.gnupg}/bin/gpg''
+        ''cannot:${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase''
+
+      ];
+    } ''
+    if gpg --list-secret-keys C0012AF12CAF6F92 &>/dev/null; then
+      exit 0
+    fi
+
+    echo 'setting up your gpg key(s)...'
+    
+    passphrase="$(
+      op read \
+        --account V7K6KBP2URA3HEJMZNEZLO6S3U \
+        'op://personal/Git GPG Key/passphrase'
+    )"
+
+    op read \
+      --account V7K6KBP2URA3HEJMZNEZLO6S3U \
+      'op://personal/Git GPG Key/private.pgp' \
+      | gpg --pinentry-mode=loopback --passphrase "$(echo "$passphrase")" --import
+  '';
+
 }
