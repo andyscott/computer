@@ -81,7 +81,7 @@ lib.mkMerge [
       pkgs.graphite-cli
       pkgs.dive
       pkgs.kubie
-      pkgs._1password
+      pkgs._1password-cli
       (alias "bazel" "${pkgs.bazelisk}/bin/bazelisk")
       pkgs.bazel-buildtools
       pkgs.gh

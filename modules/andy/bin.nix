@@ -57,7 +57,7 @@ rec {
     
     hass_token_file=~/.hass_office_token
     if [ ! -f "$hass_token_file" ]; then
-      ${pkgs._1password}/bin/op item get \
+      ${pkgs._1password-cli}/bin/op item get \
         --account V7K6KBP2URA3HEJMZNEZLO6S3U \
         'Office HASS Token' \
         --fields credential > "$hass_token_file"
@@ -87,7 +87,7 @@ rec {
       inputs = with pkgs; [
         gnupg
         "${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase"
-        _1password
+        _1password-cli
         jq
       ];
       interpreter = "${pkgs.bash}/bin/bash";
