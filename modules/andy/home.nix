@@ -114,7 +114,7 @@ lib.mkMerge [
       oauth2l
       python-vipaccess
 
-      pkgs.git-linear
+      #pkgs.git-linear
       andy-bin.git-tardis
     ];
 
@@ -270,7 +270,7 @@ lib.mkMerge [
       userEmail = "andy.g.scott@gmail.com";
       aliases = {
         tardis = "${andy-bin.git-tardis}/bin/git-tardis";
-        linear = "${pkgs.git-linear}/bin/git-linear";
+        #linear = "${pkgs.git-linear}/bin/git-linear";
       };
       signing = {
         signByDefault = true;
