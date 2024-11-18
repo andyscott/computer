@@ -33,6 +33,11 @@ let user = "andy"; in
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
 
+  system.defaults.menuExtraClock.Show24Hour = true;
+  system.defaults.menuExtraClock.ShowAMPM = false;
+  system.defaults.menuExtraClock.ShowDate = 0; # show when space allows
+
+
   # enable full keyboard access for all controls (e.g. enable tab in modal dialogs)
   system.defaults.NSGlobalDomain.AppleKeyboardUIMode = 3;
   # show all filename extensions in Finder
