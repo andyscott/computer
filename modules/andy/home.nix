@@ -224,8 +224,8 @@ lib.mkMerge [
   }
   {
     programs.emacs = {
-      #enable = true;
-      package = pkgs.callPackage ./emacs.nix { };
+      enable = true;
+      package = pkgs.emacs-30;
     };
   }
   {

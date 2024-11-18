@@ -26,19 +26,8 @@ let user = "andy"; in
   # touch ID when sudo'ing
   security.pam.enableSudoTouchIdAuth = true;
 
-  /*
-    services.emacs.enable = true;
-    services.emacs.package =
-    let
-    emacsOsx = import (pkgs.fetchFromGitHub {
-    owner = "sagittaros";
-    repo = "emacs-osx";
-    rev = "9cc5119b33d5fad1bfe4426d7a298d610a18f700";
-    sha256 = "0nk15jz7pkh85w6s887999gka5dl0va2qippbc1jgx2gb1zj5kxa";
-    });
-    in
-    emacsOsx.emacsOsxNative;
-  */
+  services.emacs.enable = true;
+  services.emacs.package = pkgs.emacs-30;
 
   # caps locks is control :)
   system.keyboard.enableKeyMapping = true;

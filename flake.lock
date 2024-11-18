@@ -54,6 +54,24 @@
         "type": "github"
       }
     },
+    "flake-utils_3": {
+      "inputs": {
+        "systems": "systems_2"
+      },
+      "locked": {
+        "lastModified": 1685518550,
+        "narHash": "sha256-o2d0KcvaXzTrPRIo0kOLV0/QXHhDQ5DTi+OxcjO8xqY=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "a1720a10a6cfe8234c0e93907ffe81be440f4cef",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "git-linear": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -141,6 +159,27 @@
         "type": "github"
       }
     },
+    "nix-darwin-emacs": {
+      "inputs": {
+        "flake-utils": "flake-utils_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1731810273,
+        "narHash": "sha256-L+4fOaE8B2CcS7s6dD9f8Oxd9XQevqc7mv6OLyo+jhI=",
+        "owner": "c4710n",
+        "repo": "nix-darwin-emacs",
+        "rev": "1e841578d8e6a036681549506c859d87a82c5842",
+        "type": "github"
+      },
+      "original": {
+        "owner": "c4710n",
+        "repo": "nix-darwin-emacs",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1731531548,
@@ -180,10 +219,26 @@
         "git-linear": "git-linear",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
+        "nix-darwin-emacs": "nix-darwin-emacs",
         "nixpkgs": "nixpkgs"
       }
     },
     "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_2": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
