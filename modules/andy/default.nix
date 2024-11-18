@@ -46,6 +46,7 @@ let user = "andy"; in
   # show all file extensions
   system.defaults.finder.AppleShowAllExtensions = true;
 
+  system.defaults.dock.expose-animation-duration = 0.0;
   system.defaults.dock.autohide = true;
   system.defaults.dock.launchanim = false;
   system.defaults.dock.orientation = "right";
