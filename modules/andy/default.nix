@@ -29,6 +29,10 @@ let user = "andy"; in
   services.emacs.enable = true;
   services.emacs.package = pkgs.emacs-30;
 
+  services.jankyborders.enable = true;
+  services.jankyborders.active_color = "0xffe1e3e4";
+  services.jankyborders.inactive_color = "0xff494d64";
+
   # caps locks is control :)
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
