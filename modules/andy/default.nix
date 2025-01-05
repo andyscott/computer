@@ -26,8 +26,8 @@ let user = "andy"; in
   # touch ID when sudo'ing
   security.pam.enableSudoTouchIdAuth = true;
 
-  services.emacs.enable = true;
-  services.emacs.package = pkgs.emacs-30;
+  #services.emacs.enable = true;
+  #services.emacs.package = pkgs.emacs-30;
 
   services.jankyborders.enable = true;
   services.jankyborders.active_color = "0xffe1e3e4";
@@ -54,6 +54,9 @@ let user = "andy"; in
   system.defaults.NSGlobalDomain.NSAutomaticWindowAnimationsEnabled = false;
   # show all file extensions
   system.defaults.finder.AppleShowAllExtensions = true;
+
+  # change force press from default (1, medium) to (2, firm)
+  system.defaults.trackpad.SecondClickThreshold = 2;
 
   system.defaults.dock.expose-animation-duration = 0.0;
   system.defaults.dock.autohide = true;

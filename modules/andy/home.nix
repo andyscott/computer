@@ -108,6 +108,7 @@ lib.mkMerge [
       pkgs.ripgrep
       pkgs.zellij
       pkgs.helix
+      pkgs.zed-editor
       pkgs.tig
       pkgs.gti
       pkgs.tokei
@@ -225,8 +226,14 @@ lib.mkMerge [
   {
     programs.emacs = {
       enable = true;
-      package = pkgs.emacs-30;
+      package = pkgs.emacsWithPackagesFromUsePackage {
+        package = pkgs.emacs-30;
+        config = ./emacs.el;
+      };
+      #extraConfig = builtins.readFile ./emacs.el;
     };
+
+    home.file.".emacs.d/init.el".source = ./emacs.el;
   }
   {
     programs.fzf = {

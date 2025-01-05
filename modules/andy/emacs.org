@@ -1,7 +1,0 @@
-#+BEGIN_SRC emacs-lisp
-(use-package nano-theme
-  :custom
-  (nano-window-divider-show t)
-  :config
-  (load-theme 'nano-light t))
-#+END_SRC
