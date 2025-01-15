@@ -133,7 +133,7 @@ lib.mkMerge [
     };
     home.file.".gnupg/gpg-agent.conf".text = ''
       allow-preset-passphrase
-      pinentry-program ${pkgs.pinentry_mac}/bin/pinentry-mac
+      pinentry-program ${andy-bin.pinentry-op}/bin/pinentry-op
     '';
 
     # This value determines the Home Manager release that your

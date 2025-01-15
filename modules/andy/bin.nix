@@ -47,14 +47,14 @@ rec {
       | ${pkgs.fzf}/bin/fzf --ansi \
       | cut -d " " -f 1 \
       | xargs -I {} bash -c "( git name-rev --refs 'heads/*' --no-undefined --name-only {} 2>/dev/null || echo {} )" \
-      | xargs git checkout; 
+      | xargs git checkout;
   '';
 
   hass = pkgs.writeShellScriptBin "hass" ''
     if [ $# -lt 1 ]; then
       exit 1
     fi
-    
+
     hass_token_file=~/.hass_office_token
     if [ ! -f "$hass_token_file" ]; then
       ${pkgs._1password-cli}/bin/op item get \
@@ -102,7 +102,7 @@ rec {
     fi
 
     echo 'setting up your gpg key(s)...'
-    
+
     passphrase="$(
       op read \
         --account V7K6KBP2URA3HEJMZNEZLO6S3U \
@@ -113,6 +113,42 @@ rec {
       --account V7K6KBP2URA3HEJMZNEZLO6S3U \
       'op://personal/Git GPG Key/private.pgp' \
       | gpg --pinentry-mode=loopback --passphrase "$(echo "$passphrase")" --import
+  '';
+
+  pinentry-op = pkgs.resholve.writeScriptBin "pinentry-op"
+    {
+      inputs = with pkgs; [
+        _1password-cli
+      ];
+      interpreter = "${pkgs.bash}/bin/bash";
+    } ''
+    passphrase="$(
+        op read \
+        --account V7K6KBP2URA3HEJMZNEZLO6S3U \
+        'op://personal/Git GPG Key/passphrase'
+    )"
+
+    echo "OK Pleased to meet you"
+
+    while IFS= read -r cmd; do
+        case "$cmd" in
+        GETPIN)
+            echo "D $passphrase"
+            echo "OK"
+            ;;
+        GETINFO*)
+            echo "D none"
+            echo "OK"
+            ;;
+        BYE)
+            echo "OK closing connection"
+            exit 0
+            ;;
+        *)
+            echo "OK"
+            ;;
+        esac
+    done
   '';
 
 }
