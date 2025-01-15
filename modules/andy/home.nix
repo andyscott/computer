@@ -225,7 +225,7 @@ lib.mkMerge [
   }
   {
     programs.emacs = {
-      enable = true;
+      #enable = true;
       package = pkgs.emacsWithPackagesFromUsePackage {
         package = pkgs.emacs-30;
         config = ./emacs.el;
@@ -356,7 +356,7 @@ lib.mkMerge [
     programs.zsh = {
       enable = true;
       enableCompletion = true;
-      initExtra = '' 
+      initExtra = ''
 
       setopt completealiases
 
