@@ -359,80 +359,9 @@ lib.mkMerge [
       initExtra = ''
 
       setopt completealiases
-
-      unset PS1
-      unset PROMPT
-
-      unset RPS1
-      unset RPROMPT
-
-      function _ansi() { (($# - 2)) || echo -n "%F{$1}$2%f"; }
-
-      function _wrap() {
-        setopt localoptions noautopushd; builtin cd -q $1
-        local -a outputs
-        local cmd output
-        shift
-        for cmd in $@; do output=$($cmd); ( (( $? )) || [[ -z "''${output// }" ]] ) || outputs+=$output; done
-
-        echo "''${(ej. .)outputs}"
-      }
-
-      function _prompt_path() {
-          _ansi magenta "%$(( ($COLUMNS > 80 ? 80 : $COLUMNS) - 40 ))<...<%~%<<"
-      }
-
-      local last_status
-
-      function _prompt_status_symbol() {
-          local root; [[ $UID = 0 || $EUID = 0 ]] && root=true || root=false
-          local error; (( $last_status )) && error=true || error=false
-
-          local color;
-
-          if ( $error ); then
-            color='red'
-          else
-            color='blue'
-          fi
-
-          ( $root && $error ) && _ansi $color '▽' && return
-          ( $root ) && _ansi $color '▼' && return
-          ( $error ) && _ansi $color '△' && return
-          _ansi $color '▲'
-      }
-
-      function _prompt_git_status() {
-          ${pkgs.git}/bin/git rev-parse 2>/dev/null || return
-
-          branch=$(${pkgs.git}/bin/git symbolic-ref HEAD 2> /dev/null | sed -e 's|^refs/heads/||')
-
-          bits=(
-            $([[ -z "$(${pkgs.git}/bin/git diff --no-ext-diff --quiet --exit-code)" ]] && _ansi green "⬢" || _ansi red "⬡")
-            $(_ansi cyan $branch)
-          )
-
-        echo $bits
-      }
-
-      function _prompt() {
-          last_status=$?
-          local bits && bits=(
-            _prompt_status_symbol
-            _prompt_git_status
-          )
-          _wrap $PWD $bits
-      }
-
-      setopt prompt_subst
-      PROMPT=' $(_prompt) ';
-
-      precmd() {
-        print -Pn "\e]133;A\e\\"
-      }
+      setopt transient_rprompt
 
       # Base16 Shell
-
       source '${base16-shell}/profile_helper.sh'
       base16_rebecca
 
@@ -445,5 +374,55 @@ lib.mkMerge [
       };
     };
 
+  }
+  {
+    programs.starship = {
+      enable = true;
+      # Configuration written to ~/.config/starship.toml
+      settings = {
+        add_newline = false;
+        continuation_prompt = "[⌇ ](dimmed)";
+        format = pkgs.lib.concatStrings [
+          "$directory"
+          "$time"
+          "$character "
+        ];
+
+        right_format = pkgs.lib.concatStrings [
+          "$git_branch"
+          "$git_status"
+          "$git_state"
+        ];
+
+        directory = {
+          truncation_length = 20;
+          truncate_to_repo = true;
+          read_only = "ˣ";
+          read_only_style = "red";
+          format = "[$path]($style)[$read_only]($read_only_style)";
+        };
+
+
+        git_branch = {
+          format = "[$branch(:$remote_branch)]($style)";
+        };
+
+        git_status = {
+          format = "([$all_status$ahead_behind]($style))";
+        };
+
+        character = {
+          format = " $symbol";
+          success_symbol = "[▲](blue)";
+          error_symbol = "[△](red)";
+        };
+
+        time = {
+          disabled = false;
+          format = " [⸱](dimmed)[$time]($style)";
+        };
+
+      };
+    };
   }
 ]
