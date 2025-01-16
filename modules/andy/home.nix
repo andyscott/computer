@@ -389,6 +389,7 @@ lib.mkMerge [
         ];
 
         right_format = pkgs.lib.concatStrings [
+          "$jobs"
           "$git_branch"
           "$git_status"
           "$git_state"
