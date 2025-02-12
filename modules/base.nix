@@ -5,7 +5,8 @@
   programs.bash.enable = true;
 
   # Make sure the nix daemon always runs
-  services.nix-daemon.enable = true;
+  # Update: option removed in recent nix?
+  #services.nix-daemon.enable = true;
 
   # Enables some of the nice new nix commands.
   nix.extraOptions =
