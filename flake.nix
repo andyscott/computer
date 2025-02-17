@@ -8,12 +8,6 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.url = "github:lnl7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    nix-darwin-emacs.url = "github:c4710n/nix-darwin-emacs";
-    nix-darwin-emacs.inputs.nixpkgs.follows = "nixpkgs";
-    git-linear.url = "github:andyscott/git-linear";
-    git-linear.inputs.nixpkgs.follows = "nixpkgs";
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -22,18 +16,11 @@
     , nixpkgs
     , home-manager
     , nix-darwin
-    , nix-darwin-emacs
-    , git-linear
-    , emacs-overlay
     }:
     let
       utils = import ./utils.nix { inherit (nixpkgs) lib; };
       nixpkgsConfig = {
         config.allowUnfree = true;
-        overlays = [
-          nix-darwin-emacs.overlays.emacs
-          emacs-overlay.overlays.package
-        ];
       };
     in
     (flake-utils.lib.eachDefaultSystem (system:
@@ -44,25 +31,25 @@
       };
     in
     {
-      devShells.default = pkgs.callPackage ./dev-shell-default.nix { };
+      devShells.default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+          pre-commit
+          git
+          nixpkgs-fmt
+          shellcheck
+          statix
+          yamlfmt
+        ];
+      };
     })
     ) // {
-      darwinConfigurations."Andys-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."com-62765" = nix-darwin.lib.darwinSystem {
         specialArgs = { inherit inputs; };
         modules = [
-          {
-            nixpkgs.hostPlatform = "aarch64-darwin";
-            system.stateVersion = 5;
-          }
           home-manager.darwinModules.home-manager
-          {
-            nixpkgs = nixpkgsConfig;
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-          }
-        ] ++ (
-          utils.discover-modules' ./modules import
-        );
+          { nixpkgs = nixpkgsConfig; }
+          ./modules/host/darwin-com-62765.nix
+        ];
       };
     };
 }
