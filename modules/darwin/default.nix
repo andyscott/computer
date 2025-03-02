@@ -52,6 +52,12 @@
   # turn off the scatter all windows when clicking desktop behavior
   # system.defaults.WindowManager.EnableStandardClickToShowDesktop = false;
 
+  # disable automatic rearrangement of spaces
+  system.defaults.dock.mru-spaces = false;
+
+  # show battery percentage in menu bar
+  system.defaults.controlcenter.BatteryShowPercentage = true;
+
   system.defaults.dock.expose-animation-duration = 0.0;
   system.defaults.dock.autohide = true;
   system.defaults.dock.launchanim = false;

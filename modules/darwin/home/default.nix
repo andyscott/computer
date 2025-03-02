@@ -1,6 +1,12 @@
 { config, lib, pkgs, user, ... }:
 
-lib.mkMerge [
+{
+  imports = [
+    ./git-andyscott.nix
+    ./git-cli-tweaks.nix
+    ./starship.nix
+  ];
+} // lib.mkMerge [
   {
     home.username = user;
     home.homeDirectory = "/Users/${user}";
@@ -138,8 +144,8 @@ lib.mkMerge [
       enableZshIntegration = true;
       package =
         let
-          version = "1.0.1";
-          sha256 = "sha256:0qs64x4gn0lgqcvbyc118sfq268b7jinqwn4rmdj2b8ps75nh3s0";
+          version = "1.1.2";
+          sha256 = "sha256:1qa83ishd5iy8zm25bzsh1r9ai2xzgvfp16hlmzl9jild0wh3bfl";
           dmg = builtins.fetchurl {
             url = "https://release.files.ghostty.org/${version}/Ghostty.dmg";
             inherit sha256;
@@ -189,55 +195,6 @@ lib.mkMerge [
     };
   }
   {
-    programs.starship = {
-      enable = true;
-      settings = {
-        add_newline = false;
-        continuation_prompt = "[⌇ ](dimmed)";
-        format = pkgs.lib.concatStrings [
-          "$directory"
-          "$time"
-          "$character "
-        ];
-
-        right_format = pkgs.lib.concatStrings [
-          "$jobs"
-          "$git_branch"
-          "$git_status"
-          "$git_state"
-        ];
-
-        directory = {
-          truncation_length = 20;
-          truncate_to_repo = true;
-          read_only = "ˣ";
-          read_only_style = "red";
-          format = "[$path]($style)[$read_only]($read_only_style)";
-        };
-
-        git_branch = {
-          format = "[$branch(:$remote_branch)]($style)";
-        };
-
-        git_status = {
-          format = "([$all_status$ahead_behind]($style))";
-        };
-
-        character = {
-          format = " $symbol";
-          success_symbol = "[▲](blue)";
-          error_symbol = "[△](red)";
-        };
-
-        time = {
-          disabled = false;
-          format = " [$time]($style)";
-        };
-
-      };
-    };
-  }
-  {
     programs.zoxide = {
       enable = true;
       enableZshIntegration = true;
@@ -265,7 +222,6 @@ lib.mkMerge [
 
       shellAliases = {
         tree = "lsd --tree";
-        gpom = "git pull origin main";
       };
     };
   }

@@ -31,10 +31,10 @@
       };
     in
     {
+      packages.google-meet-escape-artist = import ./modules/darwin/google-meet-escape-artist { inherit pkgs; };
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
           pre-commit
-          git
           nixpkgs-fmt
           shellcheck
           statix
@@ -43,13 +43,36 @@
       };
     })
     ) // {
-      darwinConfigurations."com-62765" = nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit inputs; };
-        modules = [
-          home-manager.darwinModules.home-manager
-          { nixpkgs = nixpkgsConfig; }
-          ./modules/host/darwin-com-62765.nix
-        ];
-      };
+
+      darwinConfigurations =
+        with nixpkgs.lib; let
+          discover-modules = dir: prefix: f:
+            pipe (builtins.readDir dir) [
+              (filterAttrs (n: _: strings.hasPrefix prefix n))
+              (mapAttrs' (n: v:
+                let path = "${toString dir}/${n}"; in
+                if v == "directory" && pathExists "${path}/default.nix"
+                then nameValuePair n (f path)
+                else if v == "regular" && n != "default.nix" && strings.hasSuffix ".nix" n
+                then nameValuePair (strings.removeSuffix ".nix" n) (f path)
+                else nameValuePair "" null
+              ))
+              (filterAttrs (n: v: v != null))
+              (mapAttrs' (n: v: (nameValuePair (strings.removePrefix prefix n) v)))
+            ];
+        in
+        discover-modules ./modules/host "darwin-" (module:
+          nix-darwin.lib.darwinSystem {
+            specialArgs = {
+              inherit inputs;
+            };
+            modules = [
+              home-manager.darwinModules.home-manager
+              { nixpkgs = nixpkgsConfig; }
+              module
+            ];
+          }
+        );
+
     };
 }

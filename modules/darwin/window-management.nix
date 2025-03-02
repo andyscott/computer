@@ -1,4 +1,5 @@
-_:
+{ pkgs, ... }:
+
 {
   services.jankyborders = {
     enable = true;
@@ -25,7 +26,7 @@ _:
     focus   < r         : yabai -m space --rotate 180
     focus   < n         : yabai -m window --focus east
     focus   < p         : yabai -m window --focus west
-    focus   < f         : yabai -m window --toggle float --grid 20:20:2:2:16:16
+    focus   < f         : yabai -m window --toggle float --grid 20:20:1:1:18:18
     focus   < z         : yabai -m window --toggle zoom-parent
     focus   < h         : skhd -k 'escape'; skhd -k 'cmd - h'
 
@@ -49,27 +50,77 @@ _:
   # yabai window manager
   # https://github.com/koekeishiya/yabai
   services.yabai.enable = true;
-  services.yabai.extraConfig = ''
-    #!/usr/bin/env sh
+  services.yabai.extraConfig =
+    let
 
-    yabai -m rule --add app='System Settings'    manage=off grid=20:20:5:1:0:20
-    yabai -m rule --add app='Finder'             manage=off grid=20:20:2:2:16:16
-    yabai -m rule --add app='1Password'          manage=off grid=20:20:2:2:16:16
+      generic-window-handler = pkgs.resholve.writeScriptBin "generic-window-handler"
+        {
+          inputs = with pkgs; [ findutils google-meet-escape-artist jq yabai ];
+          interpreter = "${pkgs.bash}/bin/bash";
+        } ''
+        screen_width="$(yabai -m query --displays --display | jq -r '.frame.w | trunc')"
 
-    yabai -m config debug_output                 on
-    yabai -m config mouse_follows_focus          on
-    yabai -m config window_placement             second_child
-    yabai -m config window_topmost               off
-    yabai -m config split_ratio                  0.50
-    yabai -m config auto_balance                 off
+        max_splits=3
+        if ((screen_width < 2000)); then
+            max_splits=2
+        fi
 
-    yabai -m config layout                       bsp
-    yabai -m config top_padding                  0
-    yabai -m config bottom_padding               0
-    yabai -m config left_padding                 0
-    yabai -m config right_padding                0
-    yabai -m config window_gap                   3
-  '';
+        actual_splits="$(yabai -m query --windows --space | jq 'map(select(.["is-visible"] and .["split-type"] != "none")) | length')"
+        space_id="$(yabai -m query --windows --window "$YABAI_WINDOW_ID" | jq -r '.space')"
+
+        if ((actual_splits < max_splits)); then
+            yabai -m config --space "$space_id" layout bsp
+        elif ((actual_splits == max_splits)); then
+            yabai -m config --space "$space_id" layout float
+        else
+            yabai -m window --toggle float --grid 20:20:1:1:18:18 --window "$YABAI_WINDOW_ID"
+        fi
+
+      '';
+
+      google-meet-escape-artist = import ./google-meet-escape-artist { inherit pkgs; };
+      chrome-window-handler = pkgs.resholve.writeScriptBin "chrome-window-handler"
+        {
+          inputs = with pkgs; [ findutils google-meet-escape-artist jq yabai ];
+          interpreter = "${pkgs.bash}/bin/bash";
+        } ''
+        # first resize the window to the desire size
+        yabai -m query --windows --window "$YABAI_WINDOW_ID" | \
+            jq '.[] | select(.app == "Google Chrome" and .["is-sticky"]).id' | \
+            xargs -I{} yabai -m window {} --grid 40:40:1:1:10:13
+
+        # start moving it out of the way
+        google-meet-escape-artist
+      '';
+    in
+    ''
+      #!/usr/bin/env sh
+
+      yabai -m rule   --add app='System Settings'     manage=off grid=20:20:5:1:0:20
+      yabai -m rule   --add app='Finder'              manage=off grid=20:20:2:2:16:16
+      yabai -m rule   --add app='1Password'           manage=off grid=20:20:2:2:16:16
+
+      # yabai -m signal --add event=window_created      action='${generic-window-handler}/bin/generic-window-handler'
+      # yabai -m signal --add event=window_destroyed    action='${generic-window-handler}/bin/generic-window-handler'
+      # yabai -m signal --add event=window_minimized    action='${generic-window-handler}/bin/generic-window-handler'
+      # yabai -m signal --add event=window_deminimized  action='${generic-window-handler}/bin/generic-window-handler'
+      yabai -m signal --add event=window_created      \
+                            app="^Google Chrome$"     action='${chrome-window-handler}/bin/chrome-window-handler'
+
+      yabai -m config debug_output                    on
+      yabai -m config mouse_follows_focus             on
+      yabai -m config window_placement                second_child
+      yabai -m config window_topmost                  off
+      yabai -m config split_ratio                     0.50
+      yabai -m config auto_balance                    off
+
+      yabai -m config layout                          bsp
+      yabai -m config top_padding                     0
+      yabai -m config bottom_padding                  0
+      yabai -m config left_padding                    0
+      yabai -m config right_padding                   0
+      yabai -m config window_gap                      3
+    '';
   services.yabai.enableScriptingAddition = false;
 
   launchd.user.agents.yabai.serviceConfig = {
