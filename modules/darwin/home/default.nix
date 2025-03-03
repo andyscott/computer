@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ./git-andyscott.nix
-    ./git-cli-tweaks.nix
+    ./git.nix
+    ./git-user-andyscott.nix
     ./starship.nix
   ];
 } // lib.mkMerge [

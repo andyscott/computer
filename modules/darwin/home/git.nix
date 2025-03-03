@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, config, ... }:
 let
 
   # This is a wrapper around the real git to automatically fix references
@@ -53,13 +53,27 @@ let
 in
 {
   programs.git = {
+    enable = true;
     package = git-plus;
+
+    extraConfig = {
+      color = {
+        status = "auto";
+        diff = "auto";
+        branch = "auto";
+        interactive = "auto";
+        ui = "auto";
+        sh = "auto";
+      };
+      init.defaultBranch = "main";
+    };
+
     aliases = {
       tardis = "${git-tardis}/bin/git-tardis";
     };
   };
 
-  programs.zsh = {
+  programs.zsh = lib.mkIf config.programs.git.enable {
     shellAliases = {
       gpom = "git pull origin main";
     };
