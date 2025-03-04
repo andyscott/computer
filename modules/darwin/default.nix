@@ -23,7 +23,7 @@
   programs.bash.enable = true;
 
   # touch ID when sudo'ing
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # caps locks is control :)
   system.keyboard.enableKeyMapping = true;
