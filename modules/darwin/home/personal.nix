@@ -89,7 +89,8 @@ in
   programs.git.personalConfig = {
     commit.gpgSign = true;
     tag.gpgSign = true;
-    push.gpgSign = true;
+    # github doesn't support signed push :(
+    # push.gpgSign = true;
 
     user.signingkey = "C0012AF12CAF6F92";
   };
