@@ -43,7 +43,6 @@
       };
     })
     ) // {
-
       darwinConfigurations =
         with nixpkgs.lib; let
           discover-modules = dir: prefix: f:

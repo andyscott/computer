@@ -15,6 +15,11 @@ in
       sshCommand = with pkgs; "${coreutils}/bin/env SSH_AUTH_SOCK=${SSH_AUTH_SOCK} ${openssh}/bin/ssh";
     };
 
+    #git config --global user.signingkey asdf
+    commit.gpgSign = true;
+    tag.gpgSign = true;
+    push.gpgSign = true;
+
     user = {
       name = "Andy Scott";
       email = "andy.g.scott@gmail.com";

@@ -1,5 +1,5 @@
 { pkgs, ... }:
-let user = "ags"; in {
+let user = "andy"; in {
   _module.args.user = user;
   imports = [
     ./../darwin
@@ -9,6 +9,7 @@ let user = "ags"; in {
     _module.args.user = user;
     imports = [
       ./../darwin/home
+      ./../darwin/home/personal.nix
     ];
 
   };
