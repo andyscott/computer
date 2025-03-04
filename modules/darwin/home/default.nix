@@ -3,7 +3,7 @@
 {
   imports = [
     ./git.nix
-    ./git-user-andyscott.nix
+    ./gpg.nix
     ./starship.nix
   ];
 } // lib.mkMerge [

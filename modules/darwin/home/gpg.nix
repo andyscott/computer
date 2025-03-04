@@ -5,14 +5,11 @@ let
     {
       inputs = with pkgs; [
         gnupg
-        "${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase"
         _1password-cli
-        jq
       ];
       interpreter = "${pkgs.bash}/bin/bash";
       execer = [
         ''cannot:${pkgs.gnupg}/bin/gpg''
-        ''cannot:${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase''
       ];
     } ''
     if gpg --list-secret-keys C0012AF12CAF6F92 &>/dev/null; then
@@ -68,25 +65,28 @@ let
         esac
     done
   '';
+
+  mkIf-gpg-enabled = lib.mkIf config.programs.gpg.enable;
 in
 {
-  # without this, nix-darwin managed GPG won't be able to generate keys
-  # and do other important work
   programs.gpg = {
     enable = true;
   };
-  home.file.".gnupg/gpg-agent.conf".text = ''
-    allow-preset-passphrase
-    pinentry-program ${pinentry-op}/bin/pinentry-op
-  '';
 
-  programs.zsh = lib.mkIf config.programs.gpg.enable {
+  home.file.".gnupg/gpg-agent.conf" = mkIf-gpg-enabled {
+    text = ''
+      allow-preset-passphrase
+      pinentry-program ${pinentry-op}/bin/pinentry-op
+    '';
+  };
+
+  programs.zsh = mkIf-gpg-enabled {
     initExtra = ''
       ${setup-gpg-keys}/bin/setup-gpg-keys
     '';
   };
 
-  programs.git.personalConfig = {
+  programs.git.personalConfig = mkIf-gpg-enabled {
     commit.gpgSign = true;
     tag.gpgSign = true;
     # github doesn't support signed push :(

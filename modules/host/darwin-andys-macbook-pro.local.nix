@@ -9,7 +9,6 @@ let user = "andy"; in {
     _module.args.user = user;
     imports = [
       ./../darwin/home
-      ./../darwin/home/personal.nix
     ];
 
   };
