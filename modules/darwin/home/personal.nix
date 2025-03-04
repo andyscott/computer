@@ -13,7 +13,6 @@ let
       execer = [
         ''cannot:${pkgs.gnupg}/bin/gpg''
         ''cannot:${pkgs.gnupg}/bin/libexec/gpg-preset-passphrase''
-
       ];
     } ''
     if gpg --list-secret-keys C0012AF12CAF6F92 &>/dev/null; then
@@ -85,6 +84,14 @@ in
     initExtra = ''
       ${setup-gpg-keys}/bin/setup-gpg-keys
     '';
+  };
+
+  programs.git.personalConfig = {
+    commit.gpgSign = true;
+    tag.gpgSign = true;
+    push.gpgSign = true;
+
+    user.signingkey = "C0012AF12CAF6F92";
   };
 
 }
