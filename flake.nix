@@ -30,7 +30,9 @@
       };
     in
     {
-      packages.google-meet-escape-artist = import ./modules/darwin/google-meet-escape-artist { inherit pkgs; };
+      packages = {
+        inherit (pkgs) google-meet-escape-artist;
+      };
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
           (pre-commit.mkWithPath [
@@ -42,8 +44,6 @@
           ])
         ];
       };
-    })
-    ) // {
       darwinConfigurations =
         with nixpkgs.lib; let
           discover-modules = dir: prefix: f:
@@ -63,6 +63,7 @@
         in
         discover-modules ./modules/host "darwin-" (module:
           nix-darwin.lib.darwinSystem {
+            inherit pkgs;
             specialArgs = {
               inherit inputs;
             };
@@ -73,6 +74,6 @@
             ];
           }
         );
-
-    };
+    })
+    ) // { };
 }

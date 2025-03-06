@@ -21,7 +21,7 @@ check_full_disk_access
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 nix run nixpkgs#nix-output-monitor -- \
-    build '.#darwinConfigurations."'"$(hostname)"'".system'
+    build '.#darwinConfigurations.aarch64-darwin."'"$(hostname)"'".system'
 
 "$script_dir"/result/activate-user
 sudo "$script_dir"/result/activate

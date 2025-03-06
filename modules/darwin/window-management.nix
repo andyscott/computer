@@ -78,7 +78,6 @@
 
       '';
 
-      google-meet-escape-artist = import ./google-meet-escape-artist { inherit pkgs; };
       chrome-window-handler = pkgs.resholve.writeScriptBin "chrome-window-handler"
         {
           inputs = with pkgs; [ findutils google-meet-escape-artist jq yabai ];
