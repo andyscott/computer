@@ -24,20 +24,22 @@
     in
     (flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgs = import nixpkgs {
-        inherit system;
+      pkgs = import ./pkgs {
         inherit (nixpkgsConfig) config;
+        inherit system nixpkgs;
       };
     in
     {
       packages.google-meet-escape-artist = import ./modules/darwin/google-meet-escape-artist { inherit pkgs; };
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
-          pre-commit
-          nixpkgs-fmt
-          shellcheck
-          statix
-          yamlfmt
+          (pre-commit.mkWithPath [
+            git
+            nixpkgs-fmt
+            shellcheck
+            statix
+            yamlfmt
+          ])
         ];
       };
     })
