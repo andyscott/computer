@@ -18,7 +18,6 @@
     , nix-darwin
     }:
     let
-      utils = import ./utils.nix { inherit (nixpkgs) lib; };
       nixpkgsConfig = {
         config.allowUnfree = true;
       };
