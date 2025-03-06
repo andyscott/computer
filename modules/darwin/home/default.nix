@@ -13,27 +13,32 @@
     home.homeDirectory = "/Users/${user}";
 
     # Base install of packages
-    home.packages = [
-      pkgs.coreutils
-      pkgs.moreutils
-      pkgs.jq
-      pkgs.yq-go
-      pkgs.curl
-      pkgs.diffutils
-      pkgs.nixpkgs-fmt
-      pkgs.findutils
-      pkgs.gawk
-      pkgs.gnugrep
-      pkgs.gnused
-      pkgs.gnutar
-      pkgs.wget
-      pkgs.xz
-      pkgs.ripgrep
-      pkgs.tig
-      pkgs.gti
-      pkgs.fzf
-      pkgs.ouch
-      pkgs.tokei
+    home.packages = lib.mkMerge [
+      [
+        pkgs.coreutils
+        pkgs.moreutils
+        pkgs.jq
+        pkgs.yq-go
+        pkgs.curl
+        pkgs.diffutils
+        pkgs.nixpkgs-fmt
+        pkgs.findutils
+        pkgs.gawk
+        pkgs.gnugrep
+        pkgs.gnused
+        pkgs.gnutar
+        pkgs.wget
+        pkgs.xz
+        pkgs.ripgrep
+        pkgs.tig
+        pkgs.gti
+        pkgs.fzf
+        pkgs.ouch
+        pkgs.tokei
+      ]
+      (lib.mkIf (user == "andy") [
+        pkgs.python312Packages.python-vipaccess
+      ])
     ];
 
     # This value determines the Home Manager release that your
