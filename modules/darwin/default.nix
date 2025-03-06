@@ -1,6 +1,7 @@
 { pkgs, user, ... }: {
 
   imports = [
+    ./cleanup-accessibility-services.nix
     ./dock.nix
     ./window-management.nix
     ./vscode.nix
