@@ -37,6 +37,8 @@
         buildInputs = with pkgs; [
           just
           (pre-commit.mkWithPath [
+            coreutils
+            clang-tools
             git
             nixpkgs-fmt
             shellcheck
