@@ -35,6 +35,7 @@
       };
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
+          just
           (pre-commit.mkWithPath [
             git
             nixpkgs-fmt
