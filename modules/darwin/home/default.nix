@@ -9,6 +9,7 @@
     ./ghostty.nix
     ./git.nix
     ./gpg.nix
+    ./jq.nix
     ./lsd.nix
     ./starship.nix
     ./zed-editor.nix
@@ -25,7 +26,6 @@
       [
         pkgs.coreutils
         pkgs.moreutils
-        pkgs.jq
         pkgs.yq-go
         pkgs.curl
         pkgs.diffutils
