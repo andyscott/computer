@@ -12,7 +12,7 @@ Some code in this repo is attributed to upstream sources and is either
 unlicensed or very permissive. Refer to those upstream sources for specific
 information.
 
-Some code under the `./pkg` directory is licensed under Apache 2.0.
+Some code is licensed under Apache 2.0. The header of the files says so.
 
 ```
 Copyright 2025 Andy Scott <andy.g.scott@gmail.com>
