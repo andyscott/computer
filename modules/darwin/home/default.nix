@@ -2,10 +2,17 @@
 
 {
   imports = [
+    ./atuin.nix
+    ./bat.nix
+    ./direnv.nix
     ./ghostty.nix
     ./git.nix
     ./gpg.nix
+    ./lsd.nix
     ./starship.nix
+    ./zed-editor.nix
+    ./zoxide.nix
+    ./zsh.nix
   ];
 } // lib.mkMerge [
   {
@@ -50,131 +57,5 @@
     # the Home Manager release notes for a list of state version
     # changes in each release.
     home.stateVersion = "21.11";
-  }
-  {
-    # shell history program
-    programs.atuin = {
-      enable = true;
-    };
-  }
-  {
-    programs.bat = {
-      enable = true;
-      extraPackages = with pkgs.bat-extras; [
-        (batdiff.overrideAttrs (old: {
-          doCheck = false;
-        }))
-        batman
-        batgrep
-        batwatch
-      ];
-    };
-    programs.zsh = lib.mkIf config.programs.bat.enable {
-      initExtra = ''
-        _cat_is_bat() {
-          if [ -t 1 ]; then
-            ${pkgs.bat}/bin/bat "$@"
-          else
-            # use regular cat in pipelines
-            command cat "$@"
-          fi
-        }
-
-        export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
-      '';
-
-      shellAliases = {
-        cat = "_cat_is_bat";
-      };
-    };
-  }
-  {
-    programs.direnv = {
-      enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
-    programs.zsh = lib.mkIf config.programs.direnv.enable {
-      initExtra = ''
-        _completions_hook() {
-          trap -- ''' SIGINT;
-          if (( ''${+DIRENV_FILE} )); then
-            local fpath_before=$fpath
-            typeset -xUT XDG_DATA_DIRS xdg_data_dirs
-            local xdg_data_dir
-            for xdg_data_dir in $xdg_data_dirs; do
-                if [ -d "$xdg_data_dir"/zsh/site-functions ]; then
-                    fpath+=("$xdg_data_dir"/zsh/site-functions)
-                fi
-            done
-            if [[ $fpath != $fpath_before ]]; then
-                compinit
-            fi
-          fi
-          trap - SIGINT;
-        }
-        typeset -ag precmd_functions;
-        if [[ -z "''${precmd_functions[(r)_completions_hook]+1}" ]]; then
-          precmd_functions=( ''${precmd_functions[@]} _completions_hook )
-        fi
-        typeset -ag chpwd_functions;
-        if [[ -z "''${chpwd_functions[(r)_completions_hook]+1}" ]]; then
-          chpwd_functions=( ''${chpwd_functions[@]} _completions_hook )
-        fi
-      '';
-    };
-  }
-  {
-    programs.lsd = {
-      enable = true;
-    };
-    programs.zsh = lib.mkIf config.programs.lsd.enable {
-      initExtra = ''
-        _ls_is_lsd() {
-          if [ -t 1 ]; then
-            ${pkgs.lsd}/bin/lsd "$@"
-          else
-            # use regular ls in pipelines
-            command ls "$@"
-          fi
-        }
-      '';
-
-      shellAliases = {
-        ls = "_ls_is_lsd";
-      };
-    };
-  }
-  {
-    programs.zoxide = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-  }
-  {
-    programs.zed-editor = {
-      enable = true;
-      userSettings = {
-        ui_font_size = 15;
-        buffer_font_size = 12;
-        load_direnv = "direct";
-        #theme = "Rosé Pine";
-      };
-    };
-  }
-  {
-    programs.zsh = {
-      enable = true;
-      enableCompletion = true;
-      initExtra = ''
-        setopt completealiases
-        setopt transient_rprompt
-      '';
-
-      shellAliases = {
-        tree = "lsd --tree";
-      };
-    };
   }
 ]

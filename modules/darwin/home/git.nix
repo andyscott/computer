@@ -23,13 +23,11 @@
         };
       };
 
-      programs.zsh = lib.mkIf
-        config.programs.git.enable
-        {
-          shellAliases = {
-            gpom = "git pull origin main";
-          };
+      programs.zsh = lib.mkIf config.programs.git.enable {
+        shellAliases = {
+          gpom = "git pull origin main";
         };
+      };
     }
     {
       programs.git.personalConfig = {

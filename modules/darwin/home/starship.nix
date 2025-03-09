@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, ... }:
 {
   programs.zsh = {
     initExtra = ''
@@ -11,14 +11,14 @@
     settings = {
       add_newline = false;
       continuation_prompt = "[⌇ ](dimmed)";
-      format = pkgs.lib.concatStrings [
+      format = lib.concatStrings [
         "$directory"
         "$time"
         "$character "
         #"$python"
       ];
 
-      right_format = pkgs.lib.concatStrings [
+      right_format = lib.concatStrings [
         "$jobs"
         "$git_branch"
         "$git_status"
