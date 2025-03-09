@@ -11,8 +11,7 @@
       tree = "lsd --tree";
     };
 
-    autosuggestion = {
-      enable = true;
-    };
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
   };
 }
