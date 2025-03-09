@@ -5,6 +5,7 @@
     ./atuin.nix
     ./bat.nix
     ./direnv.nix
+    ./fzf.nix
     ./ghostty.nix
     ./git.nix
     ./gpg.nix
@@ -39,7 +40,6 @@
         pkgs.ripgrep
         pkgs.tig
         pkgs.gti
-        pkgs.fzf
         pkgs.ouch
         pkgs.tokei
       ]
