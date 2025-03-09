@@ -17,6 +17,7 @@
 
     shellAliases = {
       ls = "_ls_is_lsd";
+      tree = "lsd --tree";
     };
   };
 }

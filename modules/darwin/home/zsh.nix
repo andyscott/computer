@@ -7,10 +7,6 @@
       setopt transient_rprompt
     '';
 
-    shellAliases = {
-      tree = "lsd --tree";
-    };
-
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
   };
