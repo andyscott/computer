@@ -10,5 +10,9 @@
     shellAliases = {
       tree = "lsd --tree";
     };
+
+    autosuggestion = {
+      enable = true;
+    };
   };
 }
