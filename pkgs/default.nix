@@ -9,6 +9,7 @@ import nixpkgs {
       pre-commit = super.pre-commit // {
         mkWithPath = super.callPackage ./pre-commit/mkWithPath.nix { };
       };
+      trackpad-haptic = super.callPackage ./trackpad-haptic { };
     })
   ];
 }

@@ -60,6 +60,7 @@
         pkgs.ouch
         pkgs.tokei
         pkgs.code-cursor
+        pkgs.trackpad-haptic
       ]
       (lib.mkIf (user == "andy") [
         pkgs.python312Packages.python-vipaccess
