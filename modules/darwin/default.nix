@@ -50,7 +50,7 @@
   system.defaults.trackpad.SecondClickThreshold = 2;
 
   # turn off the scatter all windows when clicking desktop behavior
-  # system.defaults.WindowManager.EnableStandardClickToShowDesktop = false;
+  system.defaults.WindowManager.EnableStandardClickToShowDesktop = false;
 
   # disable automatic rearrangement of spaces
   system.defaults.dock.mru-spaces = false;
