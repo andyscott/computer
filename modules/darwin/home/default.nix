@@ -1,6 +1,22 @@
-{ config, lib, pkgs, user, ... }:
+{ lib, config, pkgs, user, ... }:
 
 {
+  specialArgs = {
+    updatePathWithApp = appName: ''
+      app_paths=(
+        "/Applications/${appName}.app/Contents/Resources/app/bin"
+        "$HOME/Applications/Home Manager Apps/${appName}.app/Contents/Resources/app/bin"
+      )
+
+      for app_path in ''${app_paths[@]}; do
+        if [ -d "$app_path" ]; then
+          export PATH="$PATH:$app_path"
+          break
+        fi
+      done
+    '';
+  };
+
   imports = [
     ./atuin.nix
     ./bat.nix
@@ -11,6 +27,7 @@
     ./gpg.nix
     ./jq.nix
     ./lsd.nix
+    ./shell.nix
     ./starship.nix
     ./zed-editor.nix
     ./zoxide.nix
@@ -42,6 +59,7 @@
         pkgs.gti
         pkgs.ouch
         pkgs.tokei
+        pkgs.code-cursor
       ]
       (lib.mkIf (user == "andy") [
         pkgs.python312Packages.python-vipaccess

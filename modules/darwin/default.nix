@@ -4,7 +4,6 @@
     ./cleanup-accessibility-services.nix
     ./dock.nix
     ./window-management.nix
-    ./vscode.nix
   ];
 
   users.users.${user} = {
