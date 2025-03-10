@@ -15,10 +15,19 @@
     initExtra = ''
       _cat_is_bat() {
         if [ -t 1 ]; then
-          ${pkgs.bat}/bin/bat -pp "$@"
+          ${pkgs.bat}/bin/bat --style=plain --paging=never "$@"
         else
           # use regular cat in pipelines
           command cat "$@"
+        fi
+      }
+
+      _less_is_bat() {
+        if [ -t 1 ]; then
+          ${pkgs.bat}/bin/bat --style=plain --paging=always "$@"
+        else
+          # use regular less in pipelines
+          command less "$@"
         fi
       }
 
@@ -27,6 +36,7 @@
 
     shellAliases = {
       cat = "_cat_is_bat";
+      less = "_less_is_bat";
     };
   };
 }
