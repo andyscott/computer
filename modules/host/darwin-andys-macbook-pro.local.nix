@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+_:
 let user = "andy"; in {
   _module.args.user = user;
   imports = [
