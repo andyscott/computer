@@ -1,11 +1,5 @@
 { lib, ... }:
 {
-  programs.zsh = {
-    initExtra = ''
-      # export VIRTUAL_ENV_DISABLE_PROMPT=1
-    '';
-  };
-
   programs.starship = {
     enable = true;
     settings = {
@@ -20,6 +14,7 @@
 
       right_format = lib.concatStrings [
         "$jobs"
+        "$python"
         "$git_branch"
         "$git_status"
         "$git_state"
@@ -50,6 +45,10 @@
         format = " $symbol";
         success_symbol = "[▲](blue)";
         error_symbol = "[△](red)";
+      };
+
+      python = {
+        format = "[\($virtualenv\) ]($style)";
       };
 
       time = {

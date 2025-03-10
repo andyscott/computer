@@ -9,6 +9,11 @@ lib.mkMerge [
         setopt transient_rprompt
       '';
 
+      profileExtra = ''
+        # I really don't like virtualenv style prompts
+        export VIRTUAL_ENV_DISABLE_PROMPT=1
+      '';
+
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
     };
