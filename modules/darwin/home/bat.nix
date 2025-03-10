@@ -15,7 +15,7 @@
     initExtra = ''
       _cat_is_bat() {
         if [ -t 1 ]; then
-          ${pkgs.bat}/bin/bat "$@"
+          ${pkgs.bat}/bin/bat -pp "$@"
         else
           # use regular cat in pipelines
           command cat "$@"
