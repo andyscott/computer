@@ -85,6 +85,10 @@
   system.defaults.universalaccess.reduceMotion = true;
 
   system.defaults.CustomUserPreferences = {
+    "com.apple.TextInputMenu" = {
+      visible = false;
+    };
+
     "com.apple.symbolichotkeys" = {
       AppleSymbolicHotKeys = {
         # Disable 'Cmd + Space' for Spotlight Search
