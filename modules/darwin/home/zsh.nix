@@ -5,6 +5,7 @@ lib.mkMerge [
       enable = true;
       enableCompletion = true;
       initExtra = ''
+        setopt completealiases
         setopt transient_rprompt
       '';
 
