@@ -39,33 +39,57 @@
     home.homeDirectory = "/Users/${user}";
 
     # Base install of packages
-    home.packages = lib.mkMerge [
-      [
-        pkgs.coreutils
-        pkgs.moreutils
-        pkgs.yq-go
-        pkgs.curl
-        pkgs.diffutils
-        pkgs.nixpkgs-fmt
-        pkgs.findutils
-        pkgs.gawk
-        pkgs.gnugrep
-        pkgs.gnused
-        pkgs.gnutar
-        pkgs.wget
-        pkgs.xz
-        pkgs.ripgrep
-        pkgs.tig
-        pkgs.gti
-        pkgs.ouch
-        pkgs.tokei
-        pkgs.trackpad-haptic
-      ]
-      (lib.mkIf (user == "andy") [
-        pkgs.python312Packages.python-vipaccess
-      ])
+    home.packages = [
+      pkgs.coreutils
+      pkgs.moreutils
+      pkgs.yq-go
+      pkgs.curl
+      pkgs.diffutils
+      pkgs.nixpkgs-fmt
+      pkgs.findutils
+      pkgs.gawk
+      pkgs.gnugrep
+      pkgs.gnused
+      pkgs.gnutar
+      pkgs.wget
+      pkgs.xz
+      pkgs.ripgrep
+      pkgs.tig
+      pkgs.gti
+      pkgs.ouch
+      pkgs.tokei
+      pkgs.trackpad-haptic
     ];
 
+    programs.zsh = {
+      shellAliases = {
+        g = "git";
+        k = "kubectl";
+        kc = "kubectx";
+        kn = "kubens";
+      };
+    };
+  }
+  (lib.mkIf (user == "andy") {
+    home.packages = [
+      pkgs.python312Packages.python-vipaccess
+
+    ];
+  })
+  (lib.mkIf (user == "ags") {
+    home.packages = [
+      pkgs.postgresql.dev
+      pkgs.kubectx
+    ];
+    programs.zsh = {
+      shellAliases = {
+        k = "kubectl";
+        kc = "kubectx";
+        kn = "kubens";
+      };
+    };
+  })
+  {
     # This value determines the Home Manager release that your
     # configuration is compatible with. This helps avoid breakage
     # when a new Home Manager release introduces backwards
