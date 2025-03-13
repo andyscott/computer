@@ -30,6 +30,7 @@
     ./lsd.nix
     ./shell.nix
     ./starship.nix
+    ./tealdeer.nix
     ./zed-editor.nix
     ./zoxide.nix
     ./zsh.nix
