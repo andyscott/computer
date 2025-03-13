@@ -21,6 +21,7 @@
     ./atuin.nix
     ./bat.nix
     ./direnv.nix
+    ./fd.nix
     ./fzf.nix
     ./ghostty.nix
     ./git.nix
@@ -47,7 +48,6 @@
       pkgs.diffutils
       pkgs.nixpkgs-fmt
       pkgs.findutils
-      pkgs.fd
       pkgs.gawk
       pkgs.gnugrep
       pkgs.gnused
