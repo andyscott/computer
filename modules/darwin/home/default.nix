@@ -62,6 +62,7 @@
       pkgs.ouch
       pkgs.tokei
       pkgs.trackpad-haptic
+      pkgs.undollar
     ];
 
     programs.zsh = {
