@@ -64,16 +64,12 @@
     programs.zsh = {
       shellAliases = {
         g = "git";
-        k = "kubectl";
-        kc = "kubectx";
-        kn = "kubens";
       };
     };
   }
   (lib.mkIf (user == "andy") {
     home.packages = [
       pkgs.python312Packages.python-vipaccess
-
     ];
   })
   (lib.mkIf (user == "ags") {
