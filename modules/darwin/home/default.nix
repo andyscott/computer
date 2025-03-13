@@ -74,6 +74,7 @@
   })
   (lib.mkIf (user == "ags") {
     home.packages = [
+      pkgs.lazydocker
       pkgs.postgresql.dev
       pkgs.kubectx
     ];
