@@ -20,6 +20,7 @@
   imports = [
     ./atuin.nix
     ./bat.nix
+    ./btop.nix
     ./direnv.nix
     ./fd.nix
     ./fzf.nix
