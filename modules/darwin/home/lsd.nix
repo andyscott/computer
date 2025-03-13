@@ -13,6 +13,7 @@
           command ls "$@"
         fi
       }
+      compdef _lsd _ls_is_lsd
     '';
 
     shellAliases = {
