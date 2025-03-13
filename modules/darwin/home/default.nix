@@ -47,6 +47,7 @@
       pkgs.diffutils
       pkgs.nixpkgs-fmt
       pkgs.findutils
+      pkgs.fd
       pkgs.gawk
       pkgs.gnugrep
       pkgs.gnused
