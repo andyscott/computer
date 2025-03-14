@@ -21,6 +21,7 @@
     ./atuin.nix
     ./bat.nix
     ./btop.nix
+    ./carapace.nix
     ./direnv.nix
     ./fd.nix
     ./fzf.nix
