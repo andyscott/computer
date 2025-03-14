@@ -85,7 +85,16 @@
   system.defaults.universalaccess.reduceMotion = true;
 
   system.defaults.CustomUserPreferences = {
+
+    "com.apple.loginwindow" = {
+      # Do not save app state on shutdown
+      TALLogoutSavesState = false;
+      # Do not reopen apps from saved state on login
+      LoginwindowLaunchesRelaunchApps = false;
+    };
+
     "com.apple.TextInputMenu" = {
+      # hides the keyboard text input menu bar item
       visible = false;
     };
 
