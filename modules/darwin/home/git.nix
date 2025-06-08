@@ -20,6 +20,7 @@
 
         aliases = {
           personal = "config --local include.path ~/${config.xdg.configFile."git/config-personal".target}";
+          mash = "commit --amend --no-edit";
         };
       };
 

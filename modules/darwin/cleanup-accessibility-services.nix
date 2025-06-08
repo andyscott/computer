@@ -1,5 +1,5 @@
 { config, pkgs, lib, ... }: {
-  system.activationScripts.postUserActivation.text = ''
+  system.activationScripts.postActivation.text = ''
     echo >&2 "Cleaning up accessibility packages..."
 
     # macOS TCC accessibility database

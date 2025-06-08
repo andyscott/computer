@@ -1,6 +1,9 @@
 { pkgs, ... }:
 
 {
+
+  #launchd.user.agents.yabai.serviceConfig.ProgramArguments = [ "TODO: use an alias?" ];
+
   services.jankyborders = {
     enable = true;
     active_color = "0xff6dfedf";
@@ -98,6 +101,8 @@
       yabai -m rule   --add app='System Settings'     manage=off grid=20:20:5:1:0:20
       yabai -m rule   --add app='Finder'              manage=off grid=20:20:2:2:16:16
       yabai -m rule   --add app='1Password'           manage=off grid=20:20:2:2:16:16
+      yabai -m rule   --add app='Chrome'              manage=off grid=20:20:1:1:18:18
+      yabai -m rule   --add app='Safari'              manage=off grid=20:20:1:1:18:18
 
       # yabai -m signal --add event=window_created      action='${generic-window-handler}/bin/generic-window-handler'
       # yabai -m signal --add event=window_destroyed    action='${generic-window-handler}/bin/generic-window-handler'

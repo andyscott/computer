@@ -16,8 +16,9 @@ with lib; let
   '';
 
   combinedShellInit = builtins.concatStringsSep "\n" [
-    (maybeAddAppBinToPath "Visual Studio Code")
     (maybeAddAppBinToPath "Cursor")
+    (maybeAddAppBinToPath "Visual Studio Code")
+    (maybeAddAppBinToPath "Windsurf")
   ];
 in
 {

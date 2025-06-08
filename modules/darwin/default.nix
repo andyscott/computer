@@ -22,6 +22,8 @@
   programs.zsh.enable = true;
   programs.bash.enable = true;
 
+  system.primaryUser = user;
+
   # touch ID when sudo'ing
   security.pam.services.sudo_local.touchIdAuth = true;
 
@@ -45,6 +47,9 @@
   system.defaults.NSGlobalDomain.NSAutomaticWindowAnimationsEnabled = false;
   # show all file extensions
   system.defaults.finder.AppleShowAllExtensions = true;
+
+  # drag windows by ctrl + command clicking anywhere
+  system.defaults.NSGlobalDomain.NSWindowShouldDragOnGesture = true;
 
   # change force press from default (1, medium) to (2, firm)
   system.defaults.trackpad.SecondClickThreshold = 2;

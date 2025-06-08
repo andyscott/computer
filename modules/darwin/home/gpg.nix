@@ -87,12 +87,12 @@ in
   };
 
   programs.git.personalConfig = mkIf-gpg-enabled {
-    commit.gpgSign = true;
-    tag.gpgSign = true;
+    #commit.gpgSign = true;
+    #tag.gpgSign = true;
     # github doesn't support signed push :(
     # push.gpgSign = true;
 
-    user.signingkey = "C0012AF12CAF6F92";
+    #user.signingkey = "C0012AF12CAF6F92";
   };
 
 }

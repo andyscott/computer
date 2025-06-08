@@ -1,5 +1,10 @@
 { lib, config, pkgs, user, ... }:
 
+let
+  alias = name: actual: pkgs.writeShellScriptBin name ''
+    exec ${actual} "$@"
+  '';
+in
 {
   specialArgs = {
     updatePathWithApp = appName: ''
@@ -55,6 +60,8 @@
       pkgs.gnugrep
       pkgs.gnused
       pkgs.gnutar
+      pkgs.shfmt
+      pkgs.just
       pkgs.wget
       pkgs.xz
       pkgs.ripgrep
@@ -64,6 +71,10 @@
       pkgs.tokei
       pkgs.trackpad-haptic
       pkgs.undollar
+      pkgs.crane
+      pkgs.gh
+      pkgs.sapling
+      pkgs._1password-cli
     ];
 
     programs.zsh = {
@@ -79,9 +90,15 @@
   })
   (lib.mkIf (user == "ags") {
     home.packages = [
+      pkgs.azure-cli
+      pkgs.bazel-buildtools
+      pkgs.kubectx
       pkgs.lazydocker
       pkgs.postgresql.dev
-      pkgs.kubectx
+      pkgs.uv
+      #pkgs.bazelisk
+      #(alias "bazel" "${pkgs.bazelisk}/bin/bazelisk")
+      #pkgs.buildkite-cli
     ];
     programs.zsh = {
       shellAliases = {
