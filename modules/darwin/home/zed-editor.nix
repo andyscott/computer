@@ -1,6 +1,6 @@
 {
   programs.zed-editor = {
-    enable = true;
+    enable = false;
     userSettings = {
       ui_font_size = 15;
       buffer_font_size = 12;

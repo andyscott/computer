@@ -27,11 +27,6 @@ pkgs.stdenv.mkDerivation {
 
   src = ./.;
 
-  buildInputs = with pkgs; [
-    darwin.apple_sdk.frameworks.SkyLight
-    darwin.apple_sdk.frameworks.SystemConfiguration
-  ];
-
   # Set the install phase to copy the built executable to the desired output directory
   installPhase = ''
     mkdir -p $out/bin
