@@ -30,7 +30,6 @@ in
     ./direnv.nix
     ./fd.nix
     ./fzf.nix
-    ./ghostty.nix
     ./git.nix
     ./gpg.nix
     ./jq.nix
@@ -38,7 +37,6 @@ in
     ./shell.nix
     ./starship.nix
     ./tealdeer.nix
-    ./zed-editor.nix
     ./zoxide.nix
     ./zsh.nix
   ];
