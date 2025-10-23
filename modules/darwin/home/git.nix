@@ -31,6 +31,9 @@
       };
     }
     {
+      programs.git.lfs.enable = true;
+    }
+    {
       programs.git.personalConfig = {
         core = {
           sshCommand =
