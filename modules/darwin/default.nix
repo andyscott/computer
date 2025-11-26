@@ -10,10 +10,10 @@
     home = "/Users/${user}";
   };
 
-  nix.enable = false;
-
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;
+
+  services.nix-daemon.enable = true;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -130,19 +130,11 @@
     };
   };
 
-  # Enables some of the nice new nix commands.
-  nix.extraOptions =
-    let
-      experimental-features = [
-        "flakes"
-        "nix-command"
-      ];
-    in
-    ''
-      # auto-optimise-store = true # disabled per https://github.com/NixOS/nix/issues/7273
-      experimental-features = ${pkgs.lib.concatStringsSep " " experimental-features}
-      build-users-group = nixbld
-      bash-prompt-prefix = (nix:$name)\040
-      extra-nix-path = nixpkgs=flake:nixpkgs
-    '';
+  nix.settings = {
+    # auto-optimise-store = true; # disabled per https://github.com/NixOS/nix/issues/7273
+    experimental-features = [ "flakes" "nix-command" ];
+    build-users-group = "nixbld";
+    bash-prompt-prefix = "(nix:$name) ";
+    extra-nix-path = "nixpkgs=flake:nixpkgs";
+  };
 }
