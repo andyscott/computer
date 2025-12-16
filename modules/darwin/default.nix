@@ -10,10 +10,9 @@
     home = "/Users/${user}";
   };
 
+  nix.enable = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;
-
-  services.nix-daemon.enable = true;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
