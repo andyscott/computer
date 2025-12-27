@@ -10,7 +10,9 @@
     home = "/Users/${user}";
   };
 
-  nix.enable = true;
+  # Determinate manages the Nix installation/daemon, so nix-darwin must not.
+  # See: error "Determinate detected, aborting activation".
+  nix.enable = false;
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;
 
@@ -129,6 +131,8 @@
     };
   };
 
+  # Note: with nix.enable = false these settings are ignored by nix-darwin.
+  # Keep here as a reference in case we switch back to nix-darwin-managed Nix.
   nix.settings = {
     # auto-optimise-store = true; # disabled per https://github.com/NixOS/nix/issues/7273
     experimental-features = [ "flakes" "nix-command" ];
