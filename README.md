@@ -5,8 +5,13 @@ Living configuration for my computer(s).
 # setup
 
 1. Install Nix.
-2. Run `./apply.sh` or `just apply` if things have been bootstrapped
-previously.
+2. Run `./apply.sh` (or `just apply`).
+
+Note: `/run` is ephemeral on macOS. nix-darwin recreates `/run/current-system`
+on boot via the `org.nixos.activate-system` LaunchDaemon, which depends on the
+system profile at `/nix/var/nix/profiles/system`. `./apply.sh` runs
+`darwin-rebuild switch` (which updates that profile) so `/run/current-system`
+comes back after reboot.
 # license
 Some code in this repo is attributed to upstream sources and is either
 unlicensed or very permissive. Refer to those upstream sources for specific

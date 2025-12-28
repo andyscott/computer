@@ -63,20 +63,34 @@
               (filterAttrs (n: v: v != null))
               (mapAttrs' (n: v: (nameValuePair (strings.removePrefix prefix n) v)))
             ];
+
+          rawConfigurations =
+            discover-modules ./modules/host "darwin-" (module:
+              nix-darwin.lib.darwinSystem {
+                inherit pkgs;
+                specialArgs = {
+                  inherit inputs;
+                };
+                modules = [
+                  home-manager.darwinModules.home-manager
+                  { nixpkgs = nixpkgsConfig; }
+                  module
+                ];
+              }
+            );
+
+          # Compatibility: `darwin-rebuild` uses `scutil --get LocalHostName`
+          # (no `.local`) and its CLI doesn't support selecting quoted
+          # attribute names. If a host config file is named like
+          # `darwin-foo.local.nix`, provide an alias `foo` so `darwin-rebuild`
+          # can still select it.
+          normalizeHostName = name:
+            if strings.hasSuffix ".local" name then strings.removeSuffix ".local" name else name;
+
+          normalizedConfigurations =
+            mapAttrs' (name: value: nameValuePair (normalizeHostName name) value) rawConfigurations;
         in
-        discover-modules ./modules/host "darwin-" (module:
-          nix-darwin.lib.darwinSystem {
-            inherit pkgs;
-            specialArgs = {
-              inherit inputs;
-            };
-            modules = [
-              home-manager.darwinModules.home-manager
-              { nixpkgs = nixpkgsConfig; }
-              module
-            ];
-          }
-        );
+        normalizedConfigurations // rawConfigurations;
     })
     ) // { };
 }
