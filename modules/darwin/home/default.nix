@@ -25,6 +25,7 @@ in
   imports = [
     ./atuin.nix
     ./bat.nix
+    ./brew.nix
     ./btop.nix
     ./carapace.nix
     ./direnv.nix
@@ -81,11 +82,11 @@ in
       };
     };
   }
-  (lib.mkIf (user == "andy") {
-    home.packages = [
-      pkgs.python312Packages.python-vipaccess
-    ];
-  })
+  # (lib.mkIf (user == "andy") {
+  #   home.packages = [
+  #     pkgs.python312Packages.python-vipaccess
+  #   ];
+  # })
   (lib.mkIf (user == "ags") {
     home.packages = [
       pkgs.azure-cli
