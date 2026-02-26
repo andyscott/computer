@@ -6,7 +6,7 @@
     }
     {
       programs.git = {
-        extraConfig = {
+        settings = {
           color = {
             status = "auto";
             diff = "auto";
@@ -16,11 +16,10 @@
             sh = "auto";
           };
           init.defaultBranch = "main";
-        };
-
-        aliases = {
-          personal = "config --local include.path ~/${config.xdg.configFile."git/config-personal".target}";
-          mash = "commit --amend --no-edit";
+          alias = {
+            personal = "config --local include.path ~/${config.xdg.configFile."git/config-personal".target}";
+            mash = "commit --amend --no-edit";
+          };
         };
       };
 
@@ -124,7 +123,7 @@
         home.packages = [
           git-tardis
         ];
-        programs.git.aliases.tardis = "${git-tardis}/bin/git-tardis";
+        programs.git.settings.alias.tardis = "${git-tardis}/bin/git-tardis";
       }
     )
     {
