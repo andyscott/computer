@@ -41,6 +41,7 @@
             clang-tools
             git
             nixpkgs-fmt
+            nix-output-monitor
             shellcheck
             statix
             yamlfmt

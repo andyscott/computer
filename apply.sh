@@ -90,7 +90,12 @@ build_attr="$script_dir#darwinConfigurations.${SYSTEM}.\"${HOST}\".system"
 flake_target="$script_dir#${SYSTEM}.${HOST}"
 
 echo "Building: $build_attr" >&2
-nix run nixpkgs#nix-output-monitor -- build --no-warn-dirty "$build_attr"
+if command -v nom >/dev/null 2>&1; then
+  nom build --no-warn-dirty "$build_attr"
+else
+  echo "Note: 'nom' not found; using plain 'nix build'." >&2
+  nix build --no-warn-dirty "$build_attr"
+fi
 
 # Apply via the upstream entrypoint so the system profile is updated.
 # This is what makes `/run/current-system` come back after reboot (since `/run`

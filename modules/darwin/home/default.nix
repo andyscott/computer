@@ -62,6 +62,7 @@ in
       pkgs.gnutar
       pkgs.shfmt
       pkgs.just
+      pkgs.nix-output-monitor
       pkgs.wget
       pkgs.xz
       pkgs.ripgrep
