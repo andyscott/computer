@@ -33,6 +33,7 @@ in
     ./fzf.nix
     ./git.nix
     ./gpg.nix
+    ./helix.nix
     ./jq.nix
     ./lsd.nix
     ./shell.nix
