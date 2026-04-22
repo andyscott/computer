@@ -103,6 +103,8 @@
       yabai -m rule   --add app='1Password'           manage=off grid=20:20:2:2:16:16
       yabai -m rule   --add app='Chrome'              manage=off grid=20:20:1:1:18:18
       yabai -m rule   --add app='Safari'              manage=off grid=20:20:1:1:18:18
+      yabai -m rule   --add app='Slack'               manage=off grid=20:20:1:1:18:18
+      yabai -m rule   --add app='Spotify'             manage=off grid=20:20:1:1:18:18
 
       # yabai -m signal --add event=window_created      action='${generic-window-handler}/bin/generic-window-handler'
       # yabai -m signal --add event=window_destroyed    action='${generic-window-handler}/bin/generic-window-handler'
