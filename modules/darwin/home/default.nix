@@ -25,6 +25,7 @@ in
   imports = [
     ./atuin.nix
     ./bat.nix
+    ./broot.nix
     ./brew.nix
     ./btop.nix
     ./carapace.nix
