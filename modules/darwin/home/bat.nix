@@ -2,14 +2,6 @@
 {
   programs.bat = {
     enable = true;
-    extraPackages = with pkgs.bat-extras; [
-      (batdiff.overrideAttrs (old: {
-        doCheck = false;
-      }))
-      batman
-      batgrep
-      batwatch
-    ];
   };
   programs.zsh = lib.mkIf config.programs.bat.enable {
     initExtra = ''
