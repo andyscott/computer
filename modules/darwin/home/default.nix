@@ -84,6 +84,10 @@ in
         g = "git";
       };
     };
+
+    # Avoid building Home Manager's local option manpage, which currently
+    # triggers an upstream options.json store-context warning.
+    manual.manpages.enable = false;
   }
   # (lib.mkIf (user == "andy") {
   #   home.packages = [

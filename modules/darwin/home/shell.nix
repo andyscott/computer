@@ -26,7 +26,7 @@ in
     mkAfter combinedShellInit
   );
 
-  programs.zsh.initExtra = mkIf config.programs.zsh.enable (
+  programs.zsh.initContent = mkIf config.programs.zsh.enable (
     mkAfter combinedShellInit
   );
 }

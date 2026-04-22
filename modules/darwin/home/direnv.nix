@@ -7,7 +7,7 @@
     nix-direnv.enable = true;
   };
   programs.zsh = lib.mkIf config.programs.direnv.enable {
-    initExtra = ''
+    initContent = ''
       _completions_hook() {
         trap -- ''' SIGINT;
         if (( ''${+DIRENV_FILE} )); then

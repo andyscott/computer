@@ -81,7 +81,7 @@ in
   };
 
   programs.zsh = mkIf-gpg-enabled {
-    initExtra = ''
+    initContent = ''
       ${setup-gpg-keys}/bin/setup-gpg-keys
     '';
   };

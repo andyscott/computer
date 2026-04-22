@@ -21,6 +21,7 @@
             mash = "commit --amend --no-edit";
           };
         };
+        signing.format = "openpgp";
       };
 
       programs.zsh = lib.mkIf config.programs.git.enable {

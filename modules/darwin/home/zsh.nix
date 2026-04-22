@@ -4,7 +4,7 @@ lib.mkMerge [
     programs.zsh = {
       enable = true;
       enableCompletion = true;
-      initExtra = ''
+      initContent = ''
         setopt transient_rprompt
       '';
 
@@ -23,7 +23,7 @@ lib.mkMerge [
     in
     {
       programs.zsh = {
-        initExtra = mkVeryAfter "source ~/.zshrc.unmanaged 2> /dev/null";
+        initContent = mkVeryAfter "source ~/.zshrc.unmanaged 2> /dev/null";
         envExtra = mkVeryAfter "source ~/.zshenv.unmanaged 2> /dev/null";
         profileExtra = mkVeryAfter "source ~/.zprofile.unmanaged 2> /dev/null";
         #loginExtra = mkVeryAfter "source ~/.zlogin.unmanaged 2> /dev/null";

@@ -4,7 +4,7 @@
     enable = true;
   };
   programs.zsh = lib.mkIf config.programs.bat.enable {
-    initExtra = ''
+    initContent = ''
       _cat_is_bat() {
         if [ -t 1 ]; then
           ${pkgs.bat}/bin/bat --style=plain --paging=never "$@"
