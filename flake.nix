@@ -31,7 +31,7 @@
     in
     {
       packages = {
-        inherit (pkgs) google-meet-escape-artist trackpad-haptic zing;
+        inherit (pkgs) google-meet-escape-artist media-key-router trackpad-haptic zing;
       };
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [

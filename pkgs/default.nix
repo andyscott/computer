@@ -6,6 +6,7 @@ import nixpkgs {
   overlays = [
     (self: super: {
       google-meet-escape-artist = super.callPackage ./google-meet-escape-artist { };
+      media-key-router = super.callPackage ./media-key-router { };
       pre-commit = super.pre-commit // {
         mkWithPath = super.callPackage ./pre-commit/mkWithPath.nix { };
       };

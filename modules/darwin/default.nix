@@ -2,6 +2,7 @@
 
   imports = [
     #./dock.nix
+    ./media-keys.nix
     ./window-management.nix
   ];
 
