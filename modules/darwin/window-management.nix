@@ -147,7 +147,15 @@
     ''
       #!/usr/bin/env sh
 
-      yabai -m rule   --add app='System Settings'     manage=off grid=20:20:5:1:0:20
+      # Preference panes should keep the size their apps choose for them.
+      # Match the common macOS titles broadly, but keep the subrole narrow so
+      # ordinary document windows with similar names are less likely to float.
+      yabai -m rule   --add label='preference-windows' \
+                            title='^(Settings|Preferences)$' \
+                            subrole='^AXStandardWindow$' manage=off
+
+      yabai -m rule   --add label='system-settings-window' \
+                            app='System Settings' manage=off
       yabai -m rule   --add app='Finder'              manage=off grid=20:20:2:2:16:16
       yabai -m rule   --add app='1Password'           manage=off grid=20:20:2:2:16:16
       yabai -m rule   --add app='Chrome'              manage=off grid=20:20:1:1:18:18
@@ -156,6 +164,12 @@
       yabai -m rule   --add app='Spotify'             manage=off grid=20:20:1:1:18:18
       yabai -m rule   --add app='Preview'             manage=off grid=20:20:1:1:18:18
       yabai -m rule   --add app='Docker Desktop'      manage=off grid=20:20:1:1:18:18
+
+      # Keep already-open preference windows correct when yabai restarts.
+      # Applying only these two labelled rules avoids re-running the app rules
+      # above that intentionally resize their matched windows.
+      yabai -m rule --apply preference-windows
+      yabai -m rule --apply system-settings-window
 
       # yabai -m signal --add event=window_created      action='${generic-window-handler}/bin/generic-window-handler'
       # yabai -m signal --add event=window_destroyed    action='${generic-window-handler}/bin/generic-window-handler'
