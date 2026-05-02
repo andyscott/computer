@@ -94,6 +94,55 @@
         # start moving it out of the way
         google-meet-escape-artist
       '';
+
+      codex-pet-border-handler = pkgs.writeShellScriptBin "codex-pet-border-handler" ''
+        # Codex pets are non-resizable sticky dialogs owned by the Codex app.
+        # JankyBorders only has app-level blacklists. Recreate its border table
+        # before applying a per-window transparent border to pet dialogs; this
+        # keeps normal Codex windows on the default global border settings.
+        ${pkgs.jankyborders}/bin/borders \
+          width=4 \
+          hidpi=off \
+          active_color=0xff6dfedf \
+          inactive_color=0xff494d64 \
+          style=round
+
+        ${pkgs.yabai}/bin/yabai -m query --windows | \
+          ${pkgs.jq}/bin/jq -r '
+            .[]
+            | select(.app == "Codex (Alpha)")
+            | if (
+                .subrole == "AXDialog"
+                and ."is-floating"
+                and ."is-sticky"
+                and (."can-resize" | not)
+              ) then
+                "\(.id)\tpet"
+              elif .subrole == "AXStandardWindow" then
+                "\(.id)\tstandard"
+              else
+                empty
+              end
+          ' | \
+          while IFS=$'\t' read -r window_id window_kind; do
+            case "$window_kind" in
+              pet)
+                ${pkgs.jankyborders}/bin/borders "apply-to=''${window_id}" \
+                  active_color=0x00000000 \
+                  inactive_color=0x00000000 \
+                  width=0
+                ;;
+              standard)
+                ${pkgs.jankyborders}/bin/borders "apply-to=''${window_id}" \
+                  width=4 \
+                  active_color=0xff6dfedf \
+                  inactive_color=0xff494d64 \
+                  style=round \
+                  order=above
+                ;;
+            esac
+          done
+      '';
     in
     ''
       #!/usr/bin/env sh
@@ -114,6 +163,10 @@
       # yabai -m signal --add event=window_deminimized  action='${generic-window-handler}/bin/generic-window-handler'
       yabai -m signal --add event=window_created      \
                             app="^Google Chrome$"     action='${chrome-window-handler}/bin/chrome-window-handler'
+      yabai -m signal --add event=window_created      \
+                            app="^Codex \(Alpha\)$"   action='${codex-pet-border-handler}/bin/codex-pet-border-handler'
+      yabai -m signal --add event=application_launched \
+                            app="^Codex \(Alpha\)$"   action='${codex-pet-border-handler}/bin/codex-pet-border-handler'
 
       yabai -m config debug_output                    on
       yabai -m config mouse_follows_focus             on
