@@ -80,11 +80,10 @@ in
     '';
   };
 
-  programs.zsh = mkIf-gpg-enabled {
-    initContent = ''
-      ${setup-gpg-keys}/bin/setup-gpg-keys
-    '';
-  };
+  # Key import is a one-time repair action, not shell initialization work.
+  # Keep the helper available on PATH so it can be run explicitly when needed
+  # without making every new terminal pay the 1Password/GPG startup cost.
+  home.packages = mkIf-gpg-enabled [ setup-gpg-keys ];
 
   programs.git.personalConfig = mkIf-gpg-enabled {
     #commit.gpgSign = true;

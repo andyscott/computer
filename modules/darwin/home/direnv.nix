@@ -1,13 +1,23 @@
 { config, lib, pkgs, ... }:
+let
+  direnvZshHook = pkgs.runCommandLocal "direnv-hook.zsh" { } ''
+    ${lib.getExe config.programs.direnv.package} hook zsh > "$out"
+  '';
+in
 {
   programs.direnv = {
     enable = true;
     enableBashIntegration = true;
-    enableZshIntegration = true;
+    # `direnv hook zsh` is package-version-static glue around runtime
+    # `direnv export zsh` calls. Pre-render only that glue; directory-specific
+    # environment loading still happens dynamically whenever the hook runs.
+    enableZshIntegration = false;
     nix-direnv.enable = true;
   };
   programs.zsh = lib.mkIf config.programs.direnv.enable {
     initContent = ''
+      source ${direnvZshHook}
+
       _completions_hook() {
         trap -- ''' SIGINT;
         if (( ''${+DIRENV_FILE} )); then

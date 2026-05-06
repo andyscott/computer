@@ -1,7 +1,16 @@
-{ lib, ... }:
+{ config, lib, pkgs, ... }:
+let
+  starshipZshInit = pkgs.runCommandLocal "starship-init.zsh" { } ''
+    ${lib.getExe config.programs.starship.package} init zsh > "$out"
+  '';
+in
 {
   programs.starship = {
     enable = true;
+    # `starship init zsh` is package-version-static glue. Prompt rendering still
+    # shells out to `starship prompt` at runtime, so config changes remain live;
+    # only the startup-time wrapper generation moves into the Nix build.
+    enableZshIntegration = false;
     settings = {
       add_newline = false;
       continuation_prompt = "[⌇ ](dimmed)";
@@ -58,4 +67,10 @@
 
     };
   };
+
+  programs.zsh.initContent = lib.mkIf config.programs.starship.enable ''
+    if [[ $TERM != "dumb" ]]; then
+      source ${starshipZshInit}
+    fi
+  '';
 }

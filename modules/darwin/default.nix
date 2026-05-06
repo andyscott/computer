@@ -20,7 +20,15 @@
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
 
-  programs.zsh.enable = true;
+  programs.zsh = {
+    enable = true;
+    # The user shell config owns prompt + completion setup. Keeping the
+    # generated system zshrc intentionally small avoids doing expensive global
+    # startup work twice before ~/.zshrc has even begun.
+    enableGlobalCompInit = false;
+    enableBashCompletion = false;
+    promptInit = "";
+  };
   programs.bash.enable = true;
 
   system.primaryUser = user;

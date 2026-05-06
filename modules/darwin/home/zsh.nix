@@ -4,9 +4,40 @@ lib.mkMerge [
     programs.zsh = {
       enable = true;
       enableCompletion = true;
-      initContent = ''
-        setopt transient_rprompt
-      '';
+      # `compinit -C` trusts the existing dump file and skips the expensive
+      # freshness/security scan on every shell startup. Rebuild the dump only
+      # when completion definitions actually change.
+      completionInit = "autoload -U compinit && compinit -C";
+      initContent = lib.mkMerge [
+        # Home Manager's history snippet always shells out to `dirname` +
+        # `mkdir -p`, even when HISTFILE already lives directly under $HOME.
+        # Intercept that one known no-op so every shell does not pay two process
+        # spawns just to rediscover that the home directory exists.
+        (lib.mkOrder 909 ''
+          dirname() {
+            if [[ "$1" == "$HOME/.zsh_history" ]]; then
+              print -r -- "$HOME"
+            else
+              command dirname "$@"
+            fi
+          }
+
+          mkdir() {
+            if [[ "$1" == "-p" && "$2" == "$HOME" && $# -eq 2 ]]; then
+              return 0
+            fi
+            command mkdir "$@"
+          }
+        '')
+
+        (lib.mkOrder 911 ''
+          unfunction dirname mkdir
+        '')
+
+        ''
+          setopt transient_rprompt
+        ''
+      ];
 
       profileExtra = ''
         # I really don't like virtualenv style prompts
