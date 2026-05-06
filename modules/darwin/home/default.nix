@@ -56,6 +56,7 @@ in
       pkgs.moreutils
       pkgs.yq-go
       pkgs.curl
+      pkgs.grpcurl
       pkgs.diffutils
       pkgs.nixpkgs-fmt
       pkgs.findutils
