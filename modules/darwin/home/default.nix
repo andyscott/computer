@@ -32,6 +32,7 @@ in
     ./direnv.nix
     ./fd.nix
     ./fzf.nix
+    ./gh.nix
     ./git.nix
     ./gpg.nix
     ./ghostty.nix
@@ -75,7 +76,6 @@ in
       pkgs.trackpad-haptic
       pkgs.undollar
       pkgs.crane
-      pkgs.gh
       pkgs.sapling
       pkgs._1password-cli
     ];
