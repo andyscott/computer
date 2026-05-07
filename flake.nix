@@ -21,13 +21,31 @@
       nixpkgsConfig = {
         config.allowUnfree = true;
       };
-    in
-    (flake-utils.lib.eachDefaultSystem (system:
-    let
-      pkgs = import ./pkgs {
+
+      mkPkgs = system: import ./pkgs {
         inherit (nixpkgsConfig) config;
         inherit system nixpkgs;
       };
+
+      mkDarwinSystem =
+        { system
+        , modules
+        , specialArgs ? { }
+        }:
+        nix-darwin.lib.darwinSystem {
+          pkgs = mkPkgs system;
+          specialArgs = {
+            inherit inputs;
+          } // specialArgs;
+          modules = [
+            home-manager.darwinModules.home-manager
+            { nixpkgs = nixpkgsConfig; }
+          ] ++ modules;
+        };
+    in
+    (flake-utils.lib.eachDefaultSystem (system:
+    let
+      pkgs = mkPkgs system;
     in
     {
       packages = {
@@ -67,16 +85,9 @@
 
           rawConfigurations =
             discover-modules ./modules/host "darwin-" (module:
-              nix-darwin.lib.darwinSystem {
-                inherit pkgs;
-                specialArgs = {
-                  inherit inputs;
-                };
-                modules = [
-                  home-manager.darwinModules.home-manager
-                  { nixpkgs = nixpkgsConfig; }
-                  module
-                ];
+              mkDarwinSystem {
+                inherit system;
+                modules = [ module ];
               }
             );
 
@@ -93,5 +104,9 @@
         in
         normalizedConfigurations // rawConfigurations;
     })
-    ) // { };
+    ) // {
+      lib = {
+        inherit mkDarwinSystem mkPkgs nixpkgsConfig;
+      };
+    };
 }

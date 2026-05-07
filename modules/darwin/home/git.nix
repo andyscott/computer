@@ -89,6 +89,7 @@
                   esac
                 done
               fi
+              ${config.programs.git.wrapperExtraInit}
               exec git "$@"
             ''
             )
@@ -146,4 +147,13 @@
     lib.mkOption {
       type = gitIniType;
     };
+
+  options.programs.git.wrapperExtraInit = lib.mkOption {
+    type = lib.types.lines;
+    default = "";
+    description = ''
+      Additional shell code to run inside the generated git wrapper immediately
+      before delegating to the real git binary.
+    '';
+  };
 }
