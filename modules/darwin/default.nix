@@ -20,6 +20,15 @@
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
 
+  fonts.packages = with pkgs; [
+    # Maple Mono (Ligature TTF unhinted)
+    maple-mono.truetype
+    # Maple Mono NF (Ligature unhinted)
+    maple-mono.NF-unhinted
+    # Maple Mono NF CN (Ligature unhinted)
+    maple-mono.NF-CN-unhinted
+  ];
+
   programs.zsh = {
     enable = true;
     # The user shell config owns prompt + completion setup. Keeping the
