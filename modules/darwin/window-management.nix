@@ -162,6 +162,7 @@
       yabai -m rule   --add app='Safari'              manage=off grid=20:20:1:1:18:18
       yabai -m rule   --add app='Slack'               manage=off grid=20:20:1:1:18:18
       yabai -m rule   --add app='Spotify'             manage=off grid=20:20:1:1:18:18
+      yabai -m rule   --add app='Zed'                 manage=off grid=20:20:1:1:18:18
       yabai -m rule   --add app='Preview'             manage=off grid=20:20:1:1:18:18
       yabai -m rule   --add app='Docker Desktop'      manage=off grid=20:20:1:1:18:18
 
@@ -185,7 +186,6 @@
       yabai -m config debug_output                    on
       yabai -m config mouse_follows_focus             on
       yabai -m config window_placement                second_child
-      yabai -m config window_topmost                  off
       yabai -m config split_ratio                     0.50
       yabai -m config auto_balance                    off
 
